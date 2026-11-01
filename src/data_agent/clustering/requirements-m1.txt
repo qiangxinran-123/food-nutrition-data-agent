@@ -1,0 +1,6 @@
+# Install into a dedicated target without changing the project's existing dependencies.
+# pandas 3.0.1, numpy 2.3.5, pydantic 2.14.1 and fastparquet 2026.9.0 are provided by the M0 environment.
+scikit-learn==1.7.2
+scipy==1.16.3
+joblib==1.5.2
+threadpoolctl==3.6.0

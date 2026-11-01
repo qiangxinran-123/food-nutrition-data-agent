@@ -1,0 +1,629 @@
+{
+  "contract_version": "0.1",
+  "dataset_id": "off_52k_v2",
+  "domain_pack": "food_nutrition",
+  "manifest": "D:/data_mining/data/processed/off_52k_v2.manifest.json",
+  "row_id_column": "__row_id",
+  "source_row_column": "__source_row",
+  "primary_key_candidates": [
+    [
+      "code"
+    ]
+  ],
+  "read": {
+    "format": null,
+    "engine": "fastparquet",
+    "dtype": {
+      "code": "string"
+    },
+    "options": {}
+  },
+  "ingestion": {
+    "column_aliases": {},
+    "identifier_columns": [
+      "code"
+    ],
+    "preserve_raw_columns": [],
+    "raw_column_prefix": "__raw__",
+    "drop_unnamed_columns": false,
+    "strip_bom": true,
+    "case_sensitive_columns": true,
+    "encoding": null,
+    "ensure_row_id": false,
+    "row_id_prefix": "row",
+    "row_id_width": 6
+  },
+  "missing": {
+    "tokens": [],
+    "tokens_by_column": {
+      "categories": [
+        "unknown"
+      ],
+      "categories_en": [
+        "en:null"
+      ],
+      "nutriscore_grade": [
+        "unknown"
+      ]
+    },
+    "treat_empty_string_as_missing": true,
+    "trim_whitespace": true,
+    "case_sensitive": false,
+    "severity_medium_threshold": 0.2,
+    "severity_high_threshold": 0.5,
+    "severity_critical_threshold": 0.9
+  },
+  "duplicates": [
+    {
+      "rule_id": "primary_key",
+      "columns": [
+        "code"
+      ],
+      "exclude_columns": [],
+      "use_all_columns": false,
+      "normalize_text": false,
+      "case_sensitive": true,
+      "severity": "critical",
+      "description": "Rows with identical code values are duplicates."
+    }
+  ],
+  "outliers": {
+    "statistical_columns": [
+      "energy-kcal_100g",
+      "energy_100g",
+      "proteins_100g",
+      "fat_100g",
+      "saturated-fat_100g",
+      "carbohydrates_100g",
+      "sugars_100g",
+      "fiber_100g",
+      "salt_100g",
+      "sodium_100g"
+    ],
+    "iqr_multiplier": 5.0,
+    "minimum_non_null": 20,
+    "range_severity": "high",
+    "statistical_severity": "low"
+  },
+  "types_formats": {
+    "check_logical_types": true,
+    "check_numeric_finite": true,
+    "regex_severity": "medium",
+    "numeric_parse_severity": "high",
+    "non_finite_severity": "high",
+    "datetime_severity": "high",
+    "boolean_severity": "high",
+    "boolean_values": [
+      "true",
+      "false",
+      "1",
+      "0",
+      "yes",
+      "no",
+      "y",
+      "n",
+      "t",
+      "f"
+    ],
+    "datetime_format": null,
+    "dayfirst": false,
+    "yearfirst": false
+  },
+  "conflicts": [
+    {
+      "contract_version": "0.1",
+      "constraint_id": "energy_kcal_kj_consistency",
+      "kind": "formula",
+      "columns": [
+        "energy_100g",
+        "energy-kcal_100g"
+      ],
+      "expression": "abs(col(\"energy_100g\") - col(\"energy-kcal_100g\") * 4.184) <= 0.15 * col(\"energy_100g\")",
+      "tolerance": 0.15,
+      "parameters": {
+        "conversion_factor": 4.184,
+        "relative_tolerance": 0.15
+      },
+      "severity": "high",
+      "message": "Energy in kJ conflicts with energy in kcal after unit conversion.",
+      "enabled": true,
+      "description": null,
+      "metadata": {}
+    },
+    {
+      "contract_version": "0.1",
+      "constraint_id": "salt_sodium_consistency",
+      "kind": "formula",
+      "columns": [
+        "salt_100g",
+        "sodium_100g"
+      ],
+      "expression": "abs(col(\"salt_100g\") - col(\"sodium_100g\") * 2.5) <= 0.20 * col(\"salt_100g\") + 0.01",
+      "tolerance": 0.2,
+      "parameters": {
+        "conversion_factor": 2.5,
+        "relative_tolerance": 0.2
+      },
+      "severity": "medium",
+      "message": "Salt and sodium values do not agree under the expected conversion.",
+      "enabled": true,
+      "description": null,
+      "metadata": {}
+    },
+    {
+      "contract_version": "0.1",
+      "constraint_id": "sugars_not_above_carbohydrates",
+      "kind": "relation",
+      "columns": [
+        "sugars_100g",
+        "carbohydrates_100g"
+      ],
+      "expression": "col(\"sugars_100g\") <= col(\"carbohydrates_100g\") * 1.05 + 0.5",
+      "tolerance": null,
+      "parameters": {
+        "relative_tolerance": 0.05,
+        "absolute_tolerance": 0.5
+      },
+      "severity": "medium",
+      "message": "Sugars exceed total carbohydrates beyond measurement tolerance.",
+      "enabled": true,
+      "description": null,
+      "metadata": {}
+    },
+    {
+      "contract_version": "0.1",
+      "constraint_id": "saturated_fat_not_above_total_fat",
+      "kind": "relation",
+      "columns": [
+        "saturated-fat_100g",
+        "fat_100g"
+      ],
+      "expression": "col(\"saturated-fat_100g\") <= col(\"fat_100g\") * 1.05 + 0.5",
+      "tolerance": null,
+      "parameters": {
+        "relative_tolerance": 0.05,
+        "absolute_tolerance": 0.5
+      },
+      "severity": "medium",
+      "message": "Saturated fat exceeds total fat beyond measurement tolerance.",
+      "enabled": true,
+      "description": null,
+      "metadata": {}
+    }
+  ],
+  "labels": {
+    "columns": {
+      "nutriscore_grade": {
+        "unavailable_tokens": [
+          "unknown",
+          "not-applicable"
+        ],
+        "aliases": {},
+        "case_sensitive": false,
+        "trim_whitespace": true
+      }
+    },
+    "severity_medium_threshold": 0.2,
+    "severity_high_threshold": 0.5,
+    "severity_critical_threshold": 0.9
+  },
+  "imbalance": {
+    "columns": [
+      "nutriscore_grade"
+    ],
+    "minimum_minority_share": 0.15,
+    "maximum_majority_minority_ratio": 5.0,
+    "minimum_classes": 2,
+    "high_minority_share": 0.05,
+    "high_majority_minority_ratio": 10.0
+  },
+  "columns": {
+    "code": {
+      "role": "entity_id",
+      "logical_type": "identifier",
+      "unit": null,
+      "nullable": false,
+      "unique": true,
+      "missing_tokens": [],
+      "allowed_values": [],
+      "range": null,
+      "format_regex": "^(?:\\d{8}|\\d{12}|\\d{13}|\\d{14})$",
+      "datetime_format": null,
+      "dayfirst": null,
+      "yearfirst": null,
+      "boolean_values": null,
+      "description": "Open Food Facts product barcode, preserved as text.",
+      "metadata": {}
+    },
+    "product_name": {
+      "role": "product_name",
+      "logical_type": "text",
+      "unit": null,
+      "nullable": null,
+      "unique": null,
+      "missing_tokens": [],
+      "allowed_values": [],
+      "range": null,
+      "format_regex": null,
+      "datetime_format": null,
+      "dayfirst": null,
+      "yearfirst": null,
+      "boolean_values": null,
+      "description": null,
+      "metadata": {}
+    },
+    "brands": {
+      "role": "brand",
+      "logical_type": "categorical",
+      "unit": null,
+      "nullable": null,
+      "unique": null,
+      "missing_tokens": [],
+      "allowed_values": [],
+      "range": null,
+      "format_regex": null,
+      "datetime_format": null,
+      "dayfirst": null,
+      "yearfirst": null,
+      "boolean_values": null,
+      "description": null,
+      "metadata": {}
+    },
+    "categories": {
+      "role": "category",
+      "logical_type": "categorical",
+      "unit": null,
+      "nullable": null,
+      "unique": null,
+      "missing_tokens": [],
+      "allowed_values": [],
+      "range": null,
+      "format_regex": null,
+      "datetime_format": null,
+      "dayfirst": null,
+      "yearfirst": null,
+      "boolean_values": null,
+      "description": null,
+      "metadata": {}
+    },
+    "categories_en": {
+      "role": "category_en",
+      "logical_type": "categorical",
+      "unit": null,
+      "nullable": null,
+      "unique": null,
+      "missing_tokens": [],
+      "allowed_values": [],
+      "range": null,
+      "format_regex": null,
+      "datetime_format": null,
+      "dayfirst": null,
+      "yearfirst": null,
+      "boolean_values": null,
+      "description": null,
+      "metadata": {}
+    },
+    "energy-kcal_100g": {
+      "role": "energy_kcal",
+      "logical_type": "numeric",
+      "unit": "kcal/100g",
+      "nullable": null,
+      "unique": null,
+      "missing_tokens": [],
+      "allowed_values": [],
+      "range": {
+        "contract_version": "0.1",
+        "minimum": 0.0,
+        "maximum": 900.0,
+        "inclusive_minimum": true,
+        "inclusive_maximum": true
+      },
+      "format_regex": null,
+      "datetime_format": null,
+      "dayfirst": null,
+      "yearfirst": null,
+      "boolean_values": null,
+      "description": null,
+      "metadata": {}
+    },
+    "energy_100g": {
+      "role": "energy_kj",
+      "logical_type": "numeric",
+      "unit": "kJ/100g",
+      "nullable": null,
+      "unique": null,
+      "missing_tokens": [],
+      "allowed_values": [],
+      "range": {
+        "contract_version": "0.1",
+        "minimum": 0.0,
+        "maximum": 3766.0,
+        "inclusive_minimum": true,
+        "inclusive_maximum": true
+      },
+      "format_regex": null,
+      "datetime_format": null,
+      "dayfirst": null,
+      "yearfirst": null,
+      "boolean_values": null,
+      "description": null,
+      "metadata": {}
+    },
+    "proteins_100g": {
+      "role": "protein",
+      "logical_type": "numeric",
+      "unit": "g/100g",
+      "nullable": null,
+      "unique": null,
+      "missing_tokens": [],
+      "allowed_values": [],
+      "range": {
+        "contract_version": "0.1",
+        "minimum": 0.0,
+        "maximum": 100.0,
+        "inclusive_minimum": true,
+        "inclusive_maximum": true
+      },
+      "format_regex": null,
+      "datetime_format": null,
+      "dayfirst": null,
+      "yearfirst": null,
+      "boolean_values": null,
+      "description": null,
+      "metadata": {}
+    },
+    "fat_100g": {
+      "role": "fat",
+      "logical_type": "numeric",
+      "unit": "g/100g",
+      "nullable": null,
+      "unique": null,
+      "missing_tokens": [],
+      "allowed_values": [],
+      "range": {
+        "contract_version": "0.1",
+        "minimum": 0.0,
+        "maximum": 100.0,
+        "inclusive_minimum": true,
+        "inclusive_maximum": true
+      },
+      "format_regex": null,
+      "datetime_format": null,
+      "dayfirst": null,
+      "yearfirst": null,
+      "boolean_values": null,
+      "description": null,
+      "metadata": {}
+    },
+    "saturated-fat_100g": {
+      "role": "saturated_fat",
+      "logical_type": "numeric",
+      "unit": "g/100g",
+      "nullable": null,
+      "unique": null,
+      "missing_tokens": [],
+      "allowed_values": [],
+      "range": {
+        "contract_version": "0.1",
+        "minimum": 0.0,
+        "maximum": 100.0,
+        "inclusive_minimum": true,
+        "inclusive_maximum": true
+      },
+      "format_regex": null,
+      "datetime_format": null,
+      "dayfirst": null,
+      "yearfirst": null,
+      "boolean_values": null,
+      "description": null,
+      "metadata": {}
+    },
+    "carbohydrates_100g": {
+      "role": "carbohydrates",
+      "logical_type": "numeric",
+      "unit": "g/100g",
+      "nullable": null,
+      "unique": null,
+      "missing_tokens": [],
+      "allowed_values": [],
+      "range": {
+        "contract_version": "0.1",
+        "minimum": 0.0,
+        "maximum": 100.0,
+        "inclusive_minimum": true,
+        "inclusive_maximum": true
+      },
+      "format_regex": null,
+      "datetime_format": null,
+      "dayfirst": null,
+      "yearfirst": null,
+      "boolean_values": null,
+      "description": null,
+      "metadata": {}
+    },
+    "sugars_100g": {
+      "role": "sugars",
+      "logical_type": "numeric",
+      "unit": "g/100g",
+      "nullable": null,
+      "unique": null,
+      "missing_tokens": [],
+      "allowed_values": [],
+      "range": {
+        "contract_version": "0.1",
+        "minimum": 0.0,
+        "maximum": 100.0,
+        "inclusive_minimum": true,
+        "inclusive_maximum": true
+      },
+      "format_regex": null,
+      "datetime_format": null,
+      "dayfirst": null,
+      "yearfirst": null,
+      "boolean_values": null,
+      "description": null,
+      "metadata": {}
+    },
+    "fiber_100g": {
+      "role": "fiber",
+      "logical_type": "numeric",
+      "unit": "g/100g",
+      "nullable": null,
+      "unique": null,
+      "missing_tokens": [],
+      "allowed_values": [],
+      "range": {
+        "contract_version": "0.1",
+        "minimum": 0.0,
+        "maximum": 100.0,
+        "inclusive_minimum": true,
+        "inclusive_maximum": true
+      },
+      "format_regex": null,
+      "datetime_format": null,
+      "dayfirst": null,
+      "yearfirst": null,
+      "boolean_values": null,
+      "description": null,
+      "metadata": {}
+    },
+    "salt_100g": {
+      "role": "salt",
+      "logical_type": "numeric",
+      "unit": "g/100g",
+      "nullable": null,
+      "unique": null,
+      "missing_tokens": [],
+      "allowed_values": [],
+      "range": {
+        "contract_version": "0.1",
+        "minimum": 0.0,
+        "maximum": 100.0,
+        "inclusive_minimum": true,
+        "inclusive_maximum": true
+      },
+      "format_regex": null,
+      "datetime_format": null,
+      "dayfirst": null,
+      "yearfirst": null,
+      "boolean_values": null,
+      "description": null,
+      "metadata": {}
+    },
+    "sodium_100g": {
+      "role": "sodium",
+      "logical_type": "numeric",
+      "unit": "g/100g",
+      "nullable": null,
+      "unique": null,
+      "missing_tokens": [],
+      "allowed_values": [],
+      "range": {
+        "contract_version": "0.1",
+        "minimum": 0.0,
+        "maximum": 100.0,
+        "inclusive_minimum": true,
+        "inclusive_maximum": true
+      },
+      "format_regex": null,
+      "datetime_format": null,
+      "dayfirst": null,
+      "yearfirst": null,
+      "boolean_values": null,
+      "description": null,
+      "metadata": {}
+    },
+    "nutriscore_grade": {
+      "role": "label",
+      "logical_type": "categorical",
+      "unit": null,
+      "nullable": null,
+      "unique": null,
+      "missing_tokens": [],
+      "allowed_values": [
+        "a",
+        "b",
+        "c",
+        "d",
+        "e"
+      ],
+      "range": null,
+      "format_regex": null,
+      "datetime_format": null,
+      "dayfirst": null,
+      "yearfirst": null,
+      "boolean_values": null,
+      "description": "Nutri-Score grade; 'unknown' is treated as an unavailable label.",
+      "metadata": {}
+    },
+    "serving_size": {
+      "role": "serving_size",
+      "logical_type": "text",
+      "unit": null,
+      "nullable": null,
+      "unique": null,
+      "missing_tokens": [],
+      "allowed_values": [],
+      "range": null,
+      "format_regex": null,
+      "datetime_format": null,
+      "dayfirst": null,
+      "yearfirst": null,
+      "boolean_values": null,
+      "description": null,
+      "metadata": {}
+    },
+    "serving_quantity": {
+      "role": "serving_quantity",
+      "logical_type": "numeric",
+      "unit": "source_defined_unit",
+      "nullable": null,
+      "unique": null,
+      "missing_tokens": [],
+      "allowed_values": [],
+      "range": null,
+      "format_regex": null,
+      "datetime_format": null,
+      "dayfirst": null,
+      "yearfirst": null,
+      "boolean_values": null,
+      "description": null,
+      "metadata": {}
+    },
+    "__row_id": {
+      "role": "row_id",
+      "logical_type": "identifier",
+      "unit": null,
+      "nullable": false,
+      "unique": true,
+      "missing_tokens": [],
+      "allowed_values": [],
+      "range": null,
+      "format_regex": null,
+      "datetime_format": null,
+      "dayfirst": null,
+      "yearfirst": null,
+      "boolean_values": null,
+      "description": "Stable row identifier generated when the frozen base snapshot was built.",
+      "metadata": {}
+    },
+    "__source_row": {
+      "role": "source_row",
+      "logical_type": "identifier",
+      "unit": null,
+      "nullable": false,
+      "unique": true,
+      "missing_tokens": [],
+      "allowed_values": [],
+      "range": null,
+      "format_regex": null,
+      "datetime_format": null,
+      "dayfirst": null,
+      "yearfirst": null,
+      "boolean_values": null,
+      "description": "One-based source workbook row number.",
+      "metadata": {}
+    }
+  },
+  "metadata": {}
+}

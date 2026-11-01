@@ -1,0 +1,54 @@
+{
+  "contract_version": "0.1",
+  "dataset_id": "off_52k_v5",
+  "version": "5",
+  "status": "processed",
+  "created_at": "2026-10-30T15:38:26.615021+00:00",
+  "parent": {
+    "dataset_id": "off_52k_v1",
+    "version": "1",
+    "sha256": "271b12a010af112fd4af6f5f432bf9a1f043432f409fcf108d15e3789b7402e4",
+    "uri": "data/base/off_52k_v1.parquet"
+  },
+  "base_file": {
+    "path": "data/processed/off_52k_v5.parquet",
+    "format": "parquet",
+    "engine": "fastparquet",
+    "compression": "snappy",
+    "sha256": "b1f1b79d5ffc923b43fd1337565c72fad32e129e67ca219826843327f2fd192e",
+    "row_count": 50000,
+    "column_count": 20
+  },
+  "change_file": {
+    "path": "data/processed/change.off_52k_v5.changes.parquet",
+    "sha256": "72eb268bc8f80cfc29e4cab8ddf679316ebfc845f3616abf9ea20e30ab25a9cc"
+  },
+  "processing": {
+    "cleaning_applied": true,
+    "description": "Agent-selected cleaning steps; see run trace and decisions.",
+    "change_id": "change.off_52k_v5"
+  },
+  "metadata": {
+    "agent_run": "C:\\Users\\33860\\Desktop\\数据挖掘实验\\data_mining\\outputs\\agent_runs\\probe_v4pro_01",
+    "step_count": 2,
+    "tools": [
+      "clean_duplicates",
+      "clean_missing"
+    ],
+    "safety_audit": {
+      "unique_row_ids": true,
+      "row_ids_subset_of_source": true,
+      "rows": 50000,
+      "source_rows": 52000,
+      "retained_rate": 0.9615384615384616,
+      "steps": 2,
+      "cells_changed": 8363,
+      "rows_removed": 2000
+    }
+  },
+  "profile_file": {
+    "path": "C:/Users/33860/Desktop/数据挖掘实验/data_mining/config/profiles/off_52k_v5.json",
+    "dataset_id": "off_52k_v5",
+    "sha256": "24aa40517cbae2625902a2031a023e6492c7abb8d10d4334bdd41e78c68c8d09"
+  }
+}

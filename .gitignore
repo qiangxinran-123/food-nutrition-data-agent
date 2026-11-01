@@ -1,0 +1,16 @@
+.venv/
+venv/
+.python/
+.deps/
+.cache/
+**/.m1_deps/
+**/.m2_deps/
+**/.tmp/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.env
+.env.*
+!.env.example
+logs/
+outputs/

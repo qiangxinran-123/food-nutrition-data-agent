@@ -1,0 +1,41 @@
+{
+  "contract_version": "0.1",
+  "dataset_id": "off_52k_v2",
+  "version": "2",
+  "status": "processed",
+  "created_at": "2026-10-29T09:51:19.292047+00:00",
+  "parent": {
+    "dataset_id": "off_52k_v1",
+    "version": "1",
+    "sha256": "271b12a010af112fd4af6f5f432bf9a1f043432f409fcf108d15e3789b7402e4",
+    "uri": "data/base/off_52k_v1.parquet"
+  },
+  "base_file": {
+    "path": "data/processed/off_52k_v2.parquet",
+    "format": "parquet",
+    "engine": "fastparquet",
+    "compression": "snappy",
+    "sha256": "b1f89f0d71229b86a9dad8892c09285721e8f0f1f70020c6a06698ade56dd85a",
+    "row_count": 50000,
+    "column_count": 20
+  },
+  "change_file": {
+    "path": "data/processed/change.off_52k_v2_conservative.changes.parquet",
+    "sha256": "6163fd263e13dec3103a124100a1bd8b4b7f8997b7e11f0e382bf89c5e706908"
+  },
+  "processing": {
+    "cleaning_applied": true,
+    "description": "Conservative clustering baseline: remove duplicate codes; fill core numeric nutrition fields using paired-field derivations and median fallback; keep textual missingness; flag outliers/conflicts/formats; exclude unavailable labels from training; report class weights without resampling.",
+    "change_id": "change.off_52k_v2_conservative"
+  },
+  "metadata": {
+    "plan_id": "off_52k_v2_conservative",
+    "persist_mode": "final",
+    "decision_count": 53
+  },
+  "profile_file": {
+    "path": "D:/data_mining/config/profiles/off_52k_v2.json",
+    "dataset_id": "off_52k_v2",
+    "sha256": "d1af6cb4898cf88bf335c428eded670992106f391a77367ee3eaf4a299fcc2e3"
+  }
+}

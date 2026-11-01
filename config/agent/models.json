@@ -1,0 +1,64 @@
+{
+  "version": "1.0",
+  "default_profile": "deepseek-flash",
+  "profiles": {
+    "deepseek-flash": {
+      "provider": "deepseek",
+      "base_url": "https://api.deepseek.com",
+      "model": "deepseek-flash",
+      "api_key_env": "DEEPSEEK_API_KEY",
+      "thinking": "disabled",
+      "temperature": 0.2,
+      "max_tokens": 2400,
+      "timeout_seconds": 120,
+      "max_retries": 2,
+      "documented_version": "DeepSeek-V4.1-Flash-1017",
+      "pricing": {
+        "currency": "USD",
+        "unit": "per_1m_tokens",
+        "prompt_cache_hit": 0.006,
+        "prompt_cache_miss": 0.3,
+        "completion": 1.2,
+        "basis": "peak",
+        "source": "https://api-docs.deepseek.com/quick_start/pricing (checked 2026-10-30); off-peak is half of peak"
+      },
+      "notes": "主用模型。关闭 thinking 模式以便固定 temperature 并控制成本；工具调用能力已实测。"
+    },
+    "deepseek-v4-pro": {
+      "provider": "deepseek",
+      "base_url": "https://api.deepseek.com",
+      "model": "deepseek-v4-pro",
+      "api_key_env": "DEEPSEEK_API_KEY",
+      "thinking": "disabled",
+      "temperature": 0.2,
+      "max_tokens": 2400,
+      "timeout_seconds": 120,
+      "max_retries": 2,
+      "documented_version": "DeepSeek-V4-Pro-0813",
+      "pricing": {
+        "currency": "USD",
+        "unit": "per_1m_tokens",
+        "prompt_cache_hit": 0.044,
+        "prompt_cache_miss": 1.32,
+        "completion": 3.96,
+        "basis": "peak",
+        "source": "https://api-docs.deepseek.com/quick_start/pricing (checked 2026-10-30)"
+      },
+      "notes": "候选对照模型，用于同任务工具调用基线比较。"
+    },
+    "qwen-plus": {
+      "provider": "dashscope",
+      "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+      "model": "qwen-plus",
+      "api_key_env": "DASHSCOPE_API_KEY",
+      "thinking": "disabled",
+      "temperature": 0.2,
+      "max_tokens": 900,
+      "timeout_seconds": 120,
+      "max_retries": 2,
+      "documented_version": "通义千问 Plus（DashScope 兼容模式）",
+      "pricing": null,
+      "notes": "候选模型；本次无 DashScope 密钥，未实测，未进入运行结果。"
+    }
+  }
+}

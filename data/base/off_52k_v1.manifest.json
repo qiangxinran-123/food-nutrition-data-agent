@@ -1,0 +1,406 @@
+{
+  "contract_version": "0.1",
+  "dataset_id": "off_52k_v1",
+  "status": "synthetic",
+  "created_at": "2026-10-29T15:55:12.963015+08:00",
+  "source": {
+    "path": "data/raw/openfoodfacts_nutrition_sample_52000.xlsx",
+    "file_size_bytes": 6990158,
+    "sha256": "fea6232b90c603840d922511d0556d73a6d669744a48b655ad3daca0155ca412",
+    "source_url": "https://world.openfoodfacts.org/data",
+    "retrieved_date": "2026-10-28",
+    "license": null
+  },
+  "base_file": {
+    "path": "data/base/off_52k_v1.parquet",
+    "format": "parquet",
+    "compression": "snappy",
+    "engine": "fastparquet",
+    "sha256": "271b12a010af112fd4af6f5f432bf9a1f043432f409fcf108d15e3789b7402e4",
+    "row_count": 52000,
+    "column_count": 20,
+    "original_column_count": 18
+  },
+  "row_identity": {
+    "row_id_column": "__row_id",
+    "source_row_column": "__source_row",
+    "source_row_range": "2-50001",
+    "row_id_unique": true,
+    "source_row_unique": false,
+    "note": "Duplicate rows preserve the source row number and receive new row identifiers."
+  },
+  "identifier_policy": {
+    "column": "code",
+    "stored_as": "string",
+    "leading_zeros_preserved": true,
+    "leading_zero_count": 14541,
+    "missing_count": 0,
+    "duplicate_count": 2000,
+    "duplicate_group_count": 2000,
+    "length_counts": {
+      "8": 2601,
+      "13": 49136,
+      "14": 56,
+      "15": 18,
+      "16": 1,
+      "18": 15,
+      "19": 2,
+      "20": 78,
+      "21": 2,
+      "22": 12,
+      "23": 1,
+      "24": 78
+    }
+  },
+  "schema": {
+    "original_columns": [
+      "code",
+      "product_name",
+      "brands",
+      "categories",
+      "categories_en",
+      "energy-kcal_100g",
+      "energy_100g",
+      "proteins_100g",
+      "fat_100g",
+      "saturated-fat_100g",
+      "carbohydrates_100g",
+      "sugars_100g",
+      "fiber_100g",
+      "salt_100g",
+      "sodium_100g",
+      "nutriscore_grade",
+      "serving_size",
+      "serving_quantity"
+    ],
+    "added_columns": [
+      "__row_id",
+      "__source_row"
+    ],
+    "columns": [
+      {
+        "name": "code",
+        "role": "entity_id",
+        "logical_type": "identifier",
+        "physical_dtype": "object",
+        "unit": null,
+        "nullable": false,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unique_count": 50000,
+        "examples": [
+          "0002000013363",
+          "0003160441904",
+          "0008577001635"
+        ]
+      },
+      {
+        "name": "product_name",
+        "role": "product_name",
+        "logical_type": "text",
+        "physical_dtype": "object",
+        "unit": null,
+        "nullable": true,
+        "missing_count": 1,
+        "missing_rate": 1.9e-05,
+        "unique_count": 45076,
+        "examples": [
+          "Grandes galettes au beurre",
+          "Pfeffernusse Glazed Gingerbread Cookies",
+          "Butternut mountain farm, barbeque sauce, maple"
+        ]
+      },
+      {
+        "name": "brands",
+        "role": "brand",
+        "logical_type": "categorical",
+        "physical_dtype": "object",
+        "unit": null,
+        "nullable": true,
+        "missing_count": 19804,
+        "missing_rate": 0.380846,
+        "unique_count": 16091,
+        "examples": [
+          "Weiss",
+          "Butternut Mountain Farm",
+          "Long Grove Confectionery Co."
+        ]
+      },
+      {
+        "name": "categories",
+        "role": "category",
+        "logical_type": "categorical",
+        "physical_dtype": "object",
+        "unit": null,
+        "nullable": true,
+        "missing_count": 33359,
+        "missing_rate": 0.641519,
+        "unique_count": 7717,
+        "examples": [
+          "Condiments, Sauces, Groceries",
+          "Snacks",
+          "Snacks, Sweet snacks, Cocoa and its products, Confectioneries, Chocolate candies, Bonbons, Assorted chocolate candies"
+        ]
+      },
+      {
+        "name": "categories_en",
+        "role": "category_en",
+        "logical_type": "categorical",
+        "physical_dtype": "object",
+        "unit": null,
+        "nullable": true,
+        "missing_count": 22883,
+        "missing_rate": 0.440058,
+        "unique_count": 9426,
+        "examples": [
+          "en:null",
+          "Condiments,Sauces,en:groceries",
+          "Snacks"
+        ]
+      },
+      {
+        "name": "energy-kcal_100g",
+        "role": "energy_kcal",
+        "logical_type": "numeric",
+        "physical_dtype": "float64",
+        "unit": "kcal/100g",
+        "nullable": true,
+        "missing_count": 8575,
+        "missing_rate": 0.164904,
+        "unique_count": 4985,
+        "min": 0.0,
+        "median": 261.0,
+        "max": 182169.0
+      },
+      {
+        "name": "energy_100g",
+        "role": "energy_kj",
+        "logical_type": "numeric",
+        "physical_dtype": "float64",
+        "unit": "kJ/100g",
+        "nullable": true,
+        "missing_count": 8459,
+        "missing_rate": 0.162673,
+        "unique_count": 18330,
+        "min": -55.0,
+        "median": 1088.0,
+        "max": 33300.0
+      },
+      {
+        "name": "proteins_100g",
+        "role": "protein",
+        "logical_type": "numeric",
+        "physical_dtype": "float64",
+        "unit": "g/100g",
+        "nullable": true,
+        "missing_count": 8691,
+        "missing_rate": 0.167135,
+        "unique_count": 3738,
+        "min": 0.0,
+        "median": 6.0,
+        "max": 1500.0
+      },
+      {
+        "name": "fat_100g",
+        "role": "fat",
+        "logical_type": "numeric",
+        "physical_dtype": "float64",
+        "unit": "g/100g",
+        "nullable": true,
+        "missing_count": 8742,
+        "missing_rate": 0.168115,
+        "unique_count": 4153,
+        "min": 0.0,
+        "median": 6.9,
+        "max": 4444.0
+      },
+      {
+        "name": "saturated-fat_100g",
+        "role": "saturated_fat",
+        "logical_type": "numeric",
+        "physical_dtype": "float64",
+        "unit": "g/100g",
+        "nullable": true,
+        "missing_count": 9713,
+        "missing_rate": 0.186788,
+        "unique_count": 3145,
+        "min": 0.0,
+        "median": 1.7,
+        "max": 400.0
+      },
+      {
+        "name": "carbohydrates_100g",
+        "role": "carbohydrates",
+        "logical_type": "numeric",
+        "physical_dtype": "float64",
+        "unit": "g/100g",
+        "nullable": true,
+        "missing_count": 8774,
+        "missing_rate": 0.168731,
+        "unique_count": 5400,
+        "min": 0.0,
+        "median": 16.0,
+        "max": 1670.0
+      },
+      {
+        "name": "sugars_100g",
+        "role": "sugars",
+        "logical_type": "numeric",
+        "physical_dtype": "float64",
+        "unit": "g/100g",
+        "nullable": true,
+        "missing_count": 9185,
+        "missing_rate": 0.176635,
+        "unique_count": 4345,
+        "min": 0.0,
+        "median": 3.57,
+        "max": 1390.0
+      },
+      {
+        "name": "fiber_100g",
+        "role": "fiber",
+        "logical_type": "numeric",
+        "physical_dtype": "float64",
+        "unit": "g/100g",
+        "nullable": true,
+        "missing_count": 30243,
+        "missing_rate": 0.581596,
+        "unique_count": 2554,
+        "min": -0.035265625,
+        "median": 1.5,
+        "max": 278.0
+      },
+      {
+        "name": "salt_100g",
+        "role": "salt",
+        "logical_type": "numeric",
+        "physical_dtype": "float64",
+        "unit": "g/100g",
+        "nullable": true,
+        "missing_count": 12417,
+        "missing_rate": 0.238788,
+        "unique_count": 5140,
+        "min": 0.0,
+        "median": 0.525,
+        "max": 6850.0
+      },
+      {
+        "name": "sodium_100g",
+        "role": "sodium",
+        "logical_type": "numeric",
+        "physical_dtype": "float64",
+        "unit": "g/100g",
+        "nullable": true,
+        "missing_count": 12416,
+        "missing_rate": 0.238769,
+        "unique_count": 5032,
+        "min": 0.0,
+        "median": 0.209,
+        "max": 2740.0
+      },
+      {
+        "name": "nutriscore_grade",
+        "role": "label",
+        "logical_type": "categorical",
+        "physical_dtype": "object",
+        "unit": null,
+        "nullable": true,
+        "missing_count": 1,
+        "missing_rate": 1.9e-05,
+        "unique_count": 7,
+        "examples": [
+          "unknown",
+          "unknown",
+          "e"
+        ]
+      },
+      {
+        "name": "serving_size",
+        "role": "serving_size",
+        "logical_type": "text",
+        "physical_dtype": "object",
+        "unit": null,
+        "nullable": true,
+        "missing_count": 38184,
+        "missing_rate": 0.734308,
+        "unique_count": 4836,
+        "examples": [
+          "100g",
+          "2 Tbsp (35 g)",
+          "28 g (28 g)"
+        ]
+      },
+      {
+        "name": "serving_quantity",
+        "role": "serving_quantity",
+        "logical_type": "numeric",
+        "physical_dtype": "float64",
+        "unit": "source_defined_unit",
+        "nullable": true,
+        "missing_count": 38362,
+        "missing_rate": 0.737731,
+        "unique_count": 657,
+        "min": 0.0,
+        "median": 58.0,
+        "max": 2500.0
+      },
+      {
+        "name": "__row_id",
+        "role": "row_id",
+        "logical_type": "identifier",
+        "physical_dtype": "object",
+        "unit": null,
+        "nullable": false,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unique_count": 52000,
+        "examples": [
+          "off52k_000001",
+          "off52k_000002",
+          "off52k_000003"
+        ]
+      },
+      {
+        "name": "__source_row",
+        "role": "source_row",
+        "logical_type": "identifier",
+        "physical_dtype": "int64",
+        "unit": null,
+        "nullable": false,
+        "missing_count": 0,
+        "missing_rate": 0.0,
+        "unique_count": 50000,
+        "min": 2,
+        "max": 50001,
+        "median": 25018.5
+      }
+    ]
+  },
+  "injection": {
+    "method": "random_without_replacement",
+    "seed": 42,
+    "source_row_count": 50000,
+    "duplicate_rows_added": 2000,
+    "duplicate_groups": 2000,
+    "code_changed": false,
+    "duplicate_definition": "Rows with identical code values are duplicates.",
+    "parent_base_sha256": "cc563f0e92da5cc44900460c354df333b5bd4e236ae61493f42fe58db455091d",
+    "parent_dataset_id": "off_50k_v1"
+  },
+  "processing": {
+    "cleaning_applied": false,
+    "deduplication_applied": false,
+    "row_filtering_applied": false,
+    "synthetic_duplicate_injection_applied": true,
+    "notes": "The frozen 50,000-row base was replaced in place by the 52,000-row synthetic duplicate dataset."
+  },
+  "generated_by": "in-place duplicate injection, seed 42; renamed to off_52k_v1",
+  "history": {
+    "original_base_row_count": 50000,
+    "original_base_sha256": "cc563f0e92da5cc44900460c354df333b5bd4e236ae61493f42fe58db455091d",
+    "original_source_sha256": "e632417c12db9a55ae464e588b44b12d2270e76e123212bd389a035cefc7ca44",
+    "note": "The original 50,000-row base was intentionally replaced by the 52,000-row synthetic duplicate dataset.",
+    "renamed_from_dataset_id": "off_50k_v1"
+  },
+  "config_file": "config/profiles/off_52k_v1.json"
+}

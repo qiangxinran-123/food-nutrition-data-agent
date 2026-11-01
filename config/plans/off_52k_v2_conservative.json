@@ -1,0 +1,1383 @@
+{
+  "contract_version": "0.1",
+  "plan_id": "off_52k_v2_conservative",
+  "before_dataset": {
+    "contract_version": "0.1",
+    "dataset_id": "off_52k_v1",
+    "version": "1",
+    "uri": "data/base/off_52k_v1.parquet",
+    "format": "parquet",
+    "sha256": "271b12a010af112fd4af6f5f432bf9a1f043432f409fcf108d15e3789b7402e4",
+    "row_count": 52000,
+    "column_count": 20,
+    "source": "data/raw/openfoodfacts_nutrition_sample_52000.xlsx",
+    "parent_id": null,
+    "created_at": "2026-10-29T09:44:00.197392Z",
+    "metadata": {
+      "manifest_status": "synthetic",
+      "processing": {
+        "cleaning_applied": false,
+        "deduplication_applied": false,
+        "row_filtering_applied": false,
+        "synthetic_duplicate_injection_applied": true,
+        "notes": "The frozen 50,000-row base was replaced in place by the 52,000-row synthetic duplicate dataset."
+      },
+      "schema": {
+        "original_columns": [
+          "code",
+          "product_name",
+          "brands",
+          "categories",
+          "categories_en",
+          "energy-kcal_100g",
+          "energy_100g",
+          "proteins_100g",
+          "fat_100g",
+          "saturated-fat_100g",
+          "carbohydrates_100g",
+          "sugars_100g",
+          "fiber_100g",
+          "salt_100g",
+          "sodium_100g",
+          "nutriscore_grade",
+          "serving_size",
+          "serving_quantity"
+        ],
+        "added_columns": [
+          "__row_id",
+          "__source_row"
+        ],
+        "columns": [
+          {
+            "name": "code",
+            "role": "entity_id",
+            "logical_type": "identifier",
+            "physical_dtype": "object",
+            "unit": null,
+            "nullable": false,
+            "missing_count": 0,
+            "missing_rate": 0.0,
+            "unique_count": 50000,
+            "examples": [
+              "0002000013363",
+              "0003160441904",
+              "0008577001635"
+            ]
+          },
+          {
+            "name": "product_name",
+            "role": "product_name",
+            "logical_type": "text",
+            "physical_dtype": "object",
+            "unit": null,
+            "nullable": true,
+            "missing_count": 1,
+            "missing_rate": 1.9e-05,
+            "unique_count": 45076,
+            "examples": [
+              "Grandes galettes au beurre",
+              "Pfeffernusse Glazed Gingerbread Cookies",
+              "Butternut mountain farm, barbeque sauce, maple"
+            ]
+          },
+          {
+            "name": "brands",
+            "role": "brand",
+            "logical_type": "categorical",
+            "physical_dtype": "object",
+            "unit": null,
+            "nullable": true,
+            "missing_count": 19804,
+            "missing_rate": 0.380846,
+            "unique_count": 16091,
+            "examples": [
+              "Weiss",
+              "Butternut Mountain Farm",
+              "Long Grove Confectionery Co."
+            ]
+          },
+          {
+            "name": "categories",
+            "role": "category",
+            "logical_type": "categorical",
+            "physical_dtype": "object",
+            "unit": null,
+            "nullable": true,
+            "missing_count": 33359,
+            "missing_rate": 0.641519,
+            "unique_count": 7717,
+            "examples": [
+              "Condiments, Sauces, Groceries",
+              "Snacks",
+              "Snacks, Sweet snacks, Cocoa and its products, Confectioneries, Chocolate candies, Bonbons, Assorted chocolate candies"
+            ]
+          },
+          {
+            "name": "categories_en",
+            "role": "category_en",
+            "logical_type": "categorical",
+            "physical_dtype": "object",
+            "unit": null,
+            "nullable": true,
+            "missing_count": 22883,
+            "missing_rate": 0.440058,
+            "unique_count": 9426,
+            "examples": [
+              "en:null",
+              "Condiments,Sauces,en:groceries",
+              "Snacks"
+            ]
+          },
+          {
+            "name": "energy-kcal_100g",
+            "role": "energy_kcal",
+            "logical_type": "numeric",
+            "physical_dtype": "float64",
+            "unit": "kcal/100g",
+            "nullable": true,
+            "missing_count": 8575,
+            "missing_rate": 0.164904,
+            "unique_count": 4985,
+            "min": 0.0,
+            "median": 261.0,
+            "max": 182169.0
+          },
+          {
+            "name": "energy_100g",
+            "role": "energy_kj",
+            "logical_type": "numeric",
+            "physical_dtype": "float64",
+            "unit": "kJ/100g",
+            "nullable": true,
+            "missing_count": 8459,
+            "missing_rate": 0.162673,
+            "unique_count": 18330,
+            "min": -55.0,
+            "median": 1088.0,
+            "max": 33300.0
+          },
+          {
+            "name": "proteins_100g",
+            "role": "protein",
+            "logical_type": "numeric",
+            "physical_dtype": "float64",
+            "unit": "g/100g",
+            "nullable": true,
+            "missing_count": 8691,
+            "missing_rate": 0.167135,
+            "unique_count": 3738,
+            "min": 0.0,
+            "median": 6.0,
+            "max": 1500.0
+          },
+          {
+            "name": "fat_100g",
+            "role": "fat",
+            "logical_type": "numeric",
+            "physical_dtype": "float64",
+            "unit": "g/100g",
+            "nullable": true,
+            "missing_count": 8742,
+            "missing_rate": 0.168115,
+            "unique_count": 4153,
+            "min": 0.0,
+            "median": 6.9,
+            "max": 4444.0
+          },
+          {
+            "name": "saturated-fat_100g",
+            "role": "saturated_fat",
+            "logical_type": "numeric",
+            "physical_dtype": "float64",
+            "unit": "g/100g",
+            "nullable": true,
+            "missing_count": 9713,
+            "missing_rate": 0.186788,
+            "unique_count": 3145,
+            "min": 0.0,
+            "median": 1.7,
+            "max": 400.0
+          },
+          {
+            "name": "carbohydrates_100g",
+            "role": "carbohydrates",
+            "logical_type": "numeric",
+            "physical_dtype": "float64",
+            "unit": "g/100g",
+            "nullable": true,
+            "missing_count": 8774,
+            "missing_rate": 0.168731,
+            "unique_count": 5400,
+            "min": 0.0,
+            "median": 16.0,
+            "max": 1670.0
+          },
+          {
+            "name": "sugars_100g",
+            "role": "sugars",
+            "logical_type": "numeric",
+            "physical_dtype": "float64",
+            "unit": "g/100g",
+            "nullable": true,
+            "missing_count": 9185,
+            "missing_rate": 0.176635,
+            "unique_count": 4345,
+            "min": 0.0,
+            "median": 3.57,
+            "max": 1390.0
+          },
+          {
+            "name": "fiber_100g",
+            "role": "fiber",
+            "logical_type": "numeric",
+            "physical_dtype": "float64",
+            "unit": "g/100g",
+            "nullable": true,
+            "missing_count": 30243,
+            "missing_rate": 0.581596,
+            "unique_count": 2554,
+            "min": -0.035265625,
+            "median": 1.5,
+            "max": 278.0
+          },
+          {
+            "name": "salt_100g",
+            "role": "salt",
+            "logical_type": "numeric",
+            "physical_dtype": "float64",
+            "unit": "g/100g",
+            "nullable": true,
+            "missing_count": 12417,
+            "missing_rate": 0.238788,
+            "unique_count": 5140,
+            "min": 0.0,
+            "median": 0.525,
+            "max": 6850.0
+          },
+          {
+            "name": "sodium_100g",
+            "role": "sodium",
+            "logical_type": "numeric",
+            "physical_dtype": "float64",
+            "unit": "g/100g",
+            "nullable": true,
+            "missing_count": 12416,
+            "missing_rate": 0.238769,
+            "unique_count": 5032,
+            "min": 0.0,
+            "median": 0.209,
+            "max": 2740.0
+          },
+          {
+            "name": "nutriscore_grade",
+            "role": "label",
+            "logical_type": "categorical",
+            "physical_dtype": "object",
+            "unit": null,
+            "nullable": true,
+            "missing_count": 1,
+            "missing_rate": 1.9e-05,
+            "unique_count": 7,
+            "examples": [
+              "unknown",
+              "unknown",
+              "e"
+            ]
+          },
+          {
+            "name": "serving_size",
+            "role": "serving_size",
+            "logical_type": "text",
+            "physical_dtype": "object",
+            "unit": null,
+            "nullable": true,
+            "missing_count": 38184,
+            "missing_rate": 0.734308,
+            "unique_count": 4836,
+            "examples": [
+              "100g",
+              "2 Tbsp (35 g)",
+              "28 g (28 g)"
+            ]
+          },
+          {
+            "name": "serving_quantity",
+            "role": "serving_quantity",
+            "logical_type": "numeric",
+            "physical_dtype": "float64",
+            "unit": "source_defined_unit",
+            "nullable": true,
+            "missing_count": 38362,
+            "missing_rate": 0.737731,
+            "unique_count": 657,
+            "min": 0.0,
+            "median": 58.0,
+            "max": 2500.0
+          },
+          {
+            "name": "__row_id",
+            "role": "row_id",
+            "logical_type": "identifier",
+            "physical_dtype": "object",
+            "unit": null,
+            "nullable": false,
+            "missing_count": 0,
+            "missing_rate": 0.0,
+            "unique_count": 52000,
+            "examples": [
+              "off52k_000001",
+              "off52k_000002",
+              "off52k_000003"
+            ]
+          },
+          {
+            "name": "__source_row",
+            "role": "source_row",
+            "logical_type": "identifier",
+            "physical_dtype": "int64",
+            "unit": null,
+            "nullable": false,
+            "missing_count": 0,
+            "missing_rate": 0.0,
+            "unique_count": 50000,
+            "min": 2,
+            "max": 50001,
+            "median": 25018.5
+          }
+        ]
+      }
+    }
+  },
+  "decisions": [
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.duplicate.keep_first",
+      "issue_type": "duplicate",
+      "strategy_id": "keep_first",
+      "finding_id": "duplicate.primary_key",
+      "selection_artifact_id": "selection.off_52k_v1.duplicate.primary_key",
+      "target_columns": [
+        "code"
+      ],
+      "params": {},
+      "reason": "Remove the intentionally injected duplicate codes and keep the first occurrence.",
+      "expected_effect": null,
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.energy.kcal_from_kj",
+      "issue_type": "missing",
+      "strategy_id": "derive_from_formula",
+      "finding_id": "missing.energy-kcal_100g",
+      "selection_artifact_id": "selection.off_52k_v1.missing.energy-kcal_100g",
+      "target_columns": [
+        "energy-kcal_100g"
+      ],
+      "params": {
+        "target_column": "energy-kcal_100g",
+        "expression": "col(\"energy_100g\") / 4.184"
+      },
+      "reason": "Derive kcal from the existing kJ value.",
+      "expected_effect": null,
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.energy.kj_from_kcal",
+      "issue_type": "missing",
+      "strategy_id": "derive_from_formula",
+      "finding_id": "missing.energy_100g",
+      "selection_artifact_id": "selection.off_52k_v1.missing.energy_100g",
+      "target_columns": [
+        "energy_100g"
+      ],
+      "params": {
+        "target_column": "energy_100g",
+        "expression": "col(\"energy-kcal_100g\") * 4.184"
+      },
+      "reason": "Derive kJ from the existing or newly derived kcal value.",
+      "expected_effect": null,
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.energy.kcal_median_remaining",
+      "issue_type": "missing",
+      "strategy_id": "impute_statistic",
+      "finding_id": "missing.energy-kcal_100g",
+      "selection_artifact_id": "selection.off_52k_v1.missing.energy-kcal_100g",
+      "target_columns": [
+        "energy-kcal_100g"
+      ],
+      "params": {
+        "method": "median"
+      },
+      "reason": "Median-fill only rows where both energy fields were missing.",
+      "expected_effect": null,
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.energy.kj_after_median",
+      "issue_type": "missing",
+      "strategy_id": "derive_from_formula",
+      "finding_id": "missing.energy_100g",
+      "selection_artifact_id": "selection.off_52k_v1.missing.energy_100g",
+      "target_columns": [
+        "energy_100g"
+      ],
+      "params": {
+        "target_column": "energy_100g",
+        "expression": "col(\"energy-kcal_100g\") * 4.184"
+      },
+      "reason": "Derive kJ again so the energy pair remains consistent.",
+      "expected_effect": null,
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.salt_from_sodium",
+      "issue_type": "missing",
+      "strategy_id": "derive_from_formula",
+      "finding_id": "missing.salt_100g",
+      "selection_artifact_id": "selection.off_52k_v1.missing.salt_100g",
+      "target_columns": [
+        "salt_100g"
+      ],
+      "params": {
+        "target_column": "salt_100g",
+        "expression": "col(\"sodium_100g\") * 2.5"
+      },
+      "reason": "Derive salt from the existing sodium value.",
+      "expected_effect": null,
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.sodium_from_salt",
+      "issue_type": "missing",
+      "strategy_id": "derive_from_formula",
+      "finding_id": "missing.sodium_100g",
+      "selection_artifact_id": "selection.off_52k_v1.missing.sodium_100g",
+      "target_columns": [
+        "sodium_100g"
+      ],
+      "params": {
+        "target_column": "sodium_100g",
+        "expression": "col(\"salt_100g\") / 2.5"
+      },
+      "reason": "Derive sodium from the existing or newly derived salt value.",
+      "expected_effect": null,
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.salt_median_remaining",
+      "issue_type": "missing",
+      "strategy_id": "impute_statistic",
+      "finding_id": "missing.salt_100g",
+      "selection_artifact_id": "selection.off_52k_v1.missing.salt_100g",
+      "target_columns": [
+        "salt_100g"
+      ],
+      "params": {
+        "method": "median"
+      },
+      "reason": "Median-fill only rows where both salt and sodium were missing.",
+      "expected_effect": null,
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.sodium_after_median",
+      "issue_type": "missing",
+      "strategy_id": "derive_from_formula",
+      "finding_id": "missing.sodium_100g",
+      "selection_artifact_id": "selection.off_52k_v1.missing.sodium_100g",
+      "target_columns": [
+        "sodium_100g"
+      ],
+      "params": {
+        "target_column": "sodium_100g",
+        "expression": "col(\"salt_100g\") / 2.5"
+      },
+      "reason": "Derive sodium again from complete salt values.",
+      "expected_effect": null,
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.fat_from_saturated",
+      "issue_type": "missing",
+      "strategy_id": "derive_from_formula",
+      "finding_id": "missing.fat_100g",
+      "selection_artifact_id": "selection.off_52k_v1.missing.fat_100g",
+      "target_columns": [
+        "fat_100g"
+      ],
+      "params": {
+        "target_column": "fat_100g",
+        "expression": "max(6.9, min(100, (col(\"saturated-fat_100g\") - 0.5) / 1.05))"
+      },
+      "reason": "Choose a fat value that cannot be below its existing saturated-fat value.",
+      "expected_effect": null,
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.saturated_from_fat",
+      "issue_type": "missing",
+      "strategy_id": "derive_from_formula",
+      "finding_id": "missing.saturated-fat_100g",
+      "selection_artifact_id": "selection.off_52k_v1.missing.saturated-fat_100g",
+      "target_columns": [
+        "saturated-fat_100g"
+      ],
+      "params": {
+        "target_column": "saturated-fat_100g",
+        "expression": "min(1.7, col(\"fat_100g\") * 1.05 + 0.5)"
+      },
+      "reason": "Bound the saturated-fat baseline by the existing fat value.",
+      "expected_effect": null,
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.fat_median_remaining",
+      "issue_type": "missing",
+      "strategy_id": "impute_statistic",
+      "finding_id": "missing.fat_100g",
+      "selection_artifact_id": "selection.off_52k_v1.missing.fat_100g",
+      "target_columns": [
+        "fat_100g"
+      ],
+      "params": {
+        "method": "median"
+      },
+      "reason": "Median-fill only rows where both fat and saturated fat were missing.",
+      "expected_effect": null,
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.saturated_after_median",
+      "issue_type": "missing",
+      "strategy_id": "derive_from_formula",
+      "finding_id": "missing.saturated-fat_100g",
+      "selection_artifact_id": "selection.off_52k_v1.missing.saturated-fat_100g",
+      "target_columns": [
+        "saturated-fat_100g"
+      ],
+      "params": {
+        "target_column": "saturated-fat_100g",
+        "expression": "min(1.7, col(\"fat_100g\") * 1.05 + 0.5)"
+      },
+      "reason": "Derive saturated fat again from complete fat values.",
+      "expected_effect": null,
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.carbs_from_sugars",
+      "issue_type": "missing",
+      "strategy_id": "derive_from_formula",
+      "finding_id": "missing.carbohydrates_100g",
+      "selection_artifact_id": "selection.off_52k_v1.missing.carbohydrates_100g",
+      "target_columns": [
+        "carbohydrates_100g"
+      ],
+      "params": {
+        "target_column": "carbohydrates_100g",
+        "expression": "max(16.1, min(100, (col(\"sugars_100g\") - 0.5) / 1.05))"
+      },
+      "reason": "Choose a carbohydrate value that can contain the existing sugar value.",
+      "expected_effect": null,
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.sugars_from_carbs",
+      "issue_type": "missing",
+      "strategy_id": "derive_from_formula",
+      "finding_id": "missing.sugars_100g",
+      "selection_artifact_id": "selection.off_52k_v1.missing.sugars_100g",
+      "target_columns": [
+        "sugars_100g"
+      ],
+      "params": {
+        "target_column": "sugars_100g",
+        "expression": "min(3.57, col(\"carbohydrates_100g\") * 1.05 + 0.5)"
+      },
+      "reason": "Bound the sugar baseline by the existing carbohydrate value.",
+      "expected_effect": null,
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.carbs_median_remaining",
+      "issue_type": "missing",
+      "strategy_id": "impute_statistic",
+      "finding_id": "missing.carbohydrates_100g",
+      "selection_artifact_id": "selection.off_52k_v1.missing.carbohydrates_100g",
+      "target_columns": [
+        "carbohydrates_100g"
+      ],
+      "params": {
+        "method": "median"
+      },
+      "reason": "Median-fill only rows where both carbohydrates and sugars were missing.",
+      "expected_effect": null,
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.sugars_after_median",
+      "issue_type": "missing",
+      "strategy_id": "derive_from_formula",
+      "finding_id": "missing.sugars_100g",
+      "selection_artifact_id": "selection.off_52k_v1.missing.sugars_100g",
+      "target_columns": [
+        "sugars_100g"
+      ],
+      "params": {
+        "target_column": "sugars_100g",
+        "expression": "min(3.57, col(\"carbohydrates_100g\") * 1.05 + 0.5)"
+      },
+      "reason": "Derive sugars again from complete carbohydrate values.",
+      "expected_effect": null,
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.proteins_100g.median",
+      "issue_type": "missing",
+      "strategy_id": "impute_statistic",
+      "finding_id": "missing.proteins_100g",
+      "selection_artifact_id": "selection.off_52k_v1.missing.proteins_100g",
+      "target_columns": [
+        "proteins_100g"
+      ],
+      "params": {
+        "method": "median"
+      },
+      "reason": "Median-fill missing proteins_100g as a conservative clustering baseline.",
+      "expected_effect": null,
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.fiber_100g.median",
+      "issue_type": "missing",
+      "strategy_id": "impute_statistic",
+      "finding_id": "missing.fiber_100g",
+      "selection_artifact_id": "selection.off_52k_v1.missing.fiber_100g",
+      "target_columns": [
+        "fiber_100g"
+      ],
+      "params": {
+        "method": "median"
+      },
+      "reason": "Median-fill missing fiber_100g as a conservative clustering baseline.",
+      "expected_effect": null,
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.keep_missing.brands",
+      "issue_type": "missing",
+      "strategy_id": "keep_missing",
+      "finding_id": "missing.brands",
+      "selection_artifact_id": "selection.off_52k_v1.missing.brands",
+      "target_columns": [
+        "brands"
+      ],
+      "params": {},
+      "reason": "Keep missing brands as unknown; it is not median-imputed.",
+      "expected_effect": null,
+      "risk_level": "safe",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.keep_missing.categories",
+      "issue_type": "missing",
+      "strategy_id": "keep_missing",
+      "finding_id": "missing.categories",
+      "selection_artifact_id": "selection.off_52k_v1.missing.categories",
+      "target_columns": [
+        "categories"
+      ],
+      "params": {},
+      "reason": "Keep missing categories as unknown; it is not median-imputed.",
+      "expected_effect": null,
+      "risk_level": "safe",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.keep_missing.categories_en",
+      "issue_type": "missing",
+      "strategy_id": "keep_missing",
+      "finding_id": "missing.categories_en",
+      "selection_artifact_id": "selection.off_52k_v1.missing.categories_en",
+      "target_columns": [
+        "categories_en"
+      ],
+      "params": {},
+      "reason": "Keep missing categories_en as unknown; it is not median-imputed.",
+      "expected_effect": null,
+      "risk_level": "safe",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.keep_missing.nutriscore_grade",
+      "issue_type": "missing",
+      "strategy_id": "keep_missing",
+      "finding_id": "missing.nutriscore_grade",
+      "selection_artifact_id": "selection.off_52k_v1.missing.nutriscore_grade",
+      "target_columns": [
+        "nutriscore_grade"
+      ],
+      "params": {},
+      "reason": "Keep missing nutriscore_grade as unknown; it is not median-imputed.",
+      "expected_effect": null,
+      "risk_level": "safe",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.keep_missing.product_name",
+      "issue_type": "missing",
+      "strategy_id": "keep_missing",
+      "finding_id": "missing.product_name",
+      "selection_artifact_id": "selection.off_52k_v1.missing.product_name",
+      "target_columns": [
+        "product_name"
+      ],
+      "params": {},
+      "reason": "Keep missing product_name as unknown; it is not median-imputed.",
+      "expected_effect": null,
+      "risk_level": "safe",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.keep_missing.serving_quantity",
+      "issue_type": "missing",
+      "strategy_id": "keep_missing",
+      "finding_id": "missing.serving_quantity",
+      "selection_artifact_id": "selection.off_52k_v1.missing.serving_quantity",
+      "target_columns": [
+        "serving_quantity"
+      ],
+      "params": {},
+      "reason": "Keep missing serving_quantity as unknown; it is not median-imputed.",
+      "expected_effect": null,
+      "risk_level": "safe",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.keep_missing.serving_size",
+      "issue_type": "missing",
+      "strategy_id": "keep_missing",
+      "finding_id": "missing.serving_size",
+      "selection_artifact_id": "selection.off_52k_v1.missing.serving_size",
+      "target_columns": [
+        "serving_size"
+      ],
+      "params": {},
+      "reason": "Keep missing serving_size as unknown; it is not median-imputed.",
+      "expected_effect": null,
+      "risk_level": "safe",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.outlier.flag_only.outlier.iqr.carbohydrates_100g",
+      "issue_type": "outlier",
+      "strategy_id": "flag_only",
+      "finding_id": "outlier.iqr.carbohydrates_100g",
+      "selection_artifact_id": "selection.off_52k_v1.outlier.iqr.carbohydrates_100g",
+      "target_columns": [
+        "carbohydrates_100g"
+      ],
+      "params": {},
+      "reason": "Flag statistical or range-tail values without overwriting potentially real measurements.",
+      "expected_effect": null,
+      "risk_level": "safe",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.outlier.flag_only.outlier.iqr.energy-kcal_100g",
+      "issue_type": "outlier",
+      "strategy_id": "flag_only",
+      "finding_id": "outlier.iqr.energy-kcal_100g",
+      "selection_artifact_id": "selection.off_52k_v1.outlier.iqr.energy-kcal_100g",
+      "target_columns": [
+        "energy-kcal_100g"
+      ],
+      "params": {},
+      "reason": "Flag statistical or range-tail values without overwriting potentially real measurements.",
+      "expected_effect": null,
+      "risk_level": "safe",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.outlier.flag_only.outlier.iqr.energy_100g",
+      "issue_type": "outlier",
+      "strategy_id": "flag_only",
+      "finding_id": "outlier.iqr.energy_100g",
+      "selection_artifact_id": "selection.off_52k_v1.outlier.iqr.energy_100g",
+      "target_columns": [
+        "energy_100g"
+      ],
+      "params": {},
+      "reason": "Flag statistical or range-tail values without overwriting potentially real measurements.",
+      "expected_effect": null,
+      "risk_level": "safe",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.outlier.flag_only.outlier.iqr.fat_100g",
+      "issue_type": "outlier",
+      "strategy_id": "flag_only",
+      "finding_id": "outlier.iqr.fat_100g",
+      "selection_artifact_id": "selection.off_52k_v1.outlier.iqr.fat_100g",
+      "target_columns": [
+        "fat_100g"
+      ],
+      "params": {},
+      "reason": "Flag statistical or range-tail values without overwriting potentially real measurements.",
+      "expected_effect": null,
+      "risk_level": "safe",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.outlier.flag_only.outlier.iqr.fiber_100g",
+      "issue_type": "outlier",
+      "strategy_id": "flag_only",
+      "finding_id": "outlier.iqr.fiber_100g",
+      "selection_artifact_id": "selection.off_52k_v1.outlier.iqr.fiber_100g",
+      "target_columns": [
+        "fiber_100g"
+      ],
+      "params": {},
+      "reason": "Flag statistical or range-tail values without overwriting potentially real measurements.",
+      "expected_effect": null,
+      "risk_level": "safe",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.outlier.flag_only.outlier.iqr.proteins_100g",
+      "issue_type": "outlier",
+      "strategy_id": "flag_only",
+      "finding_id": "outlier.iqr.proteins_100g",
+      "selection_artifact_id": "selection.off_52k_v1.outlier.iqr.proteins_100g",
+      "target_columns": [
+        "proteins_100g"
+      ],
+      "params": {},
+      "reason": "Flag statistical or range-tail values without overwriting potentially real measurements.",
+      "expected_effect": null,
+      "risk_level": "safe",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.outlier.flag_only.outlier.iqr.salt_100g",
+      "issue_type": "outlier",
+      "strategy_id": "flag_only",
+      "finding_id": "outlier.iqr.salt_100g",
+      "selection_artifact_id": "selection.off_52k_v1.outlier.iqr.salt_100g",
+      "target_columns": [
+        "salt_100g"
+      ],
+      "params": {},
+      "reason": "Flag statistical or range-tail values without overwriting potentially real measurements.",
+      "expected_effect": null,
+      "risk_level": "safe",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.outlier.flag_only.outlier.iqr.saturated-fat_100g",
+      "issue_type": "outlier",
+      "strategy_id": "flag_only",
+      "finding_id": "outlier.iqr.saturated-fat_100g",
+      "selection_artifact_id": "selection.off_52k_v1.outlier.iqr.saturated-fat_100g",
+      "target_columns": [
+        "saturated-fat_100g"
+      ],
+      "params": {},
+      "reason": "Flag statistical or range-tail values without overwriting potentially real measurements.",
+      "expected_effect": null,
+      "risk_level": "safe",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.outlier.flag_only.outlier.iqr.sodium_100g",
+      "issue_type": "outlier",
+      "strategy_id": "flag_only",
+      "finding_id": "outlier.iqr.sodium_100g",
+      "selection_artifact_id": "selection.off_52k_v1.outlier.iqr.sodium_100g",
+      "target_columns": [
+        "sodium_100g"
+      ],
+      "params": {},
+      "reason": "Flag statistical or range-tail values without overwriting potentially real measurements.",
+      "expected_effect": null,
+      "risk_level": "safe",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.outlier.flag_only.outlier.iqr.sugars_100g",
+      "issue_type": "outlier",
+      "strategy_id": "flag_only",
+      "finding_id": "outlier.iqr.sugars_100g",
+      "selection_artifact_id": "selection.off_52k_v1.outlier.iqr.sugars_100g",
+      "target_columns": [
+        "sugars_100g"
+      ],
+      "params": {},
+      "reason": "Flag statistical or range-tail values without overwriting potentially real measurements.",
+      "expected_effect": null,
+      "risk_level": "safe",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.outlier.flag_only.outlier.range.carbohydrates_100g",
+      "issue_type": "outlier",
+      "strategy_id": "flag_only",
+      "finding_id": "outlier.range.carbohydrates_100g",
+      "selection_artifact_id": "selection.off_52k_v1.outlier.range.carbohydrates_100g",
+      "target_columns": [
+        "carbohydrates_100g"
+      ],
+      "params": {},
+      "reason": "Flag statistical or range-tail values without overwriting potentially real measurements.",
+      "expected_effect": null,
+      "risk_level": "safe",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.outlier.flag_only.outlier.range.energy-kcal_100g",
+      "issue_type": "outlier",
+      "strategy_id": "flag_only",
+      "finding_id": "outlier.range.energy-kcal_100g",
+      "selection_artifact_id": "selection.off_52k_v1.outlier.range.energy-kcal_100g",
+      "target_columns": [
+        "energy-kcal_100g"
+      ],
+      "params": {},
+      "reason": "Flag statistical or range-tail values without overwriting potentially real measurements.",
+      "expected_effect": null,
+      "risk_level": "safe",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.outlier.flag_only.outlier.range.energy_100g",
+      "issue_type": "outlier",
+      "strategy_id": "flag_only",
+      "finding_id": "outlier.range.energy_100g",
+      "selection_artifact_id": "selection.off_52k_v1.outlier.range.energy_100g",
+      "target_columns": [
+        "energy_100g"
+      ],
+      "params": {},
+      "reason": "Flag statistical or range-tail values without overwriting potentially real measurements.",
+      "expected_effect": null,
+      "risk_level": "safe",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.outlier.flag_only.outlier.range.fat_100g",
+      "issue_type": "outlier",
+      "strategy_id": "flag_only",
+      "finding_id": "outlier.range.fat_100g",
+      "selection_artifact_id": "selection.off_52k_v1.outlier.range.fat_100g",
+      "target_columns": [
+        "fat_100g"
+      ],
+      "params": {},
+      "reason": "Flag statistical or range-tail values without overwriting potentially real measurements.",
+      "expected_effect": null,
+      "risk_level": "safe",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.outlier.flag_only.outlier.range.fiber_100g",
+      "issue_type": "outlier",
+      "strategy_id": "flag_only",
+      "finding_id": "outlier.range.fiber_100g",
+      "selection_artifact_id": "selection.off_52k_v1.outlier.range.fiber_100g",
+      "target_columns": [
+        "fiber_100g"
+      ],
+      "params": {},
+      "reason": "Flag statistical or range-tail values without overwriting potentially real measurements.",
+      "expected_effect": null,
+      "risk_level": "safe",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.outlier.flag_only.outlier.range.proteins_100g",
+      "issue_type": "outlier",
+      "strategy_id": "flag_only",
+      "finding_id": "outlier.range.proteins_100g",
+      "selection_artifact_id": "selection.off_52k_v1.outlier.range.proteins_100g",
+      "target_columns": [
+        "proteins_100g"
+      ],
+      "params": {},
+      "reason": "Flag statistical or range-tail values without overwriting potentially real measurements.",
+      "expected_effect": null,
+      "risk_level": "safe",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.outlier.flag_only.outlier.range.salt_100g",
+      "issue_type": "outlier",
+      "strategy_id": "flag_only",
+      "finding_id": "outlier.range.salt_100g",
+      "selection_artifact_id": "selection.off_52k_v1.outlier.range.salt_100g",
+      "target_columns": [
+        "salt_100g"
+      ],
+      "params": {},
+      "reason": "Flag statistical or range-tail values without overwriting potentially real measurements.",
+      "expected_effect": null,
+      "risk_level": "safe",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.outlier.flag_only.outlier.range.saturated-fat_100g",
+      "issue_type": "outlier",
+      "strategy_id": "flag_only",
+      "finding_id": "outlier.range.saturated-fat_100g",
+      "selection_artifact_id": "selection.off_52k_v1.outlier.range.saturated-fat_100g",
+      "target_columns": [
+        "saturated-fat_100g"
+      ],
+      "params": {},
+      "reason": "Flag statistical or range-tail values without overwriting potentially real measurements.",
+      "expected_effect": null,
+      "risk_level": "safe",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.outlier.flag_only.outlier.range.sodium_100g",
+      "issue_type": "outlier",
+      "strategy_id": "flag_only",
+      "finding_id": "outlier.range.sodium_100g",
+      "selection_artifact_id": "selection.off_52k_v1.outlier.range.sodium_100g",
+      "target_columns": [
+        "sodium_100g"
+      ],
+      "params": {},
+      "reason": "Flag statistical or range-tail values without overwriting potentially real measurements.",
+      "expected_effect": null,
+      "risk_level": "safe",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.outlier.flag_only.outlier.range.sugars_100g",
+      "issue_type": "outlier",
+      "strategy_id": "flag_only",
+      "finding_id": "outlier.range.sugars_100g",
+      "selection_artifact_id": "selection.off_52k_v1.outlier.range.sugars_100g",
+      "target_columns": [
+        "sugars_100g"
+      ],
+      "params": {},
+      "reason": "Flag statistical or range-tail values without overwriting potentially real measurements.",
+      "expected_effect": null,
+      "risk_level": "safe",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.conflict.flag_only.conflict.energy_kcal_kj_consistency",
+      "issue_type": "constraint",
+      "strategy_id": "flag_only",
+      "finding_id": "conflict.energy_kcal_kj_consistency",
+      "selection_artifact_id": "selection.off_52k_v1.conflict.energy_kcal_kj_consistency",
+      "target_columns": [],
+      "params": {},
+      "reason": "Keep conflicting source values for review rather than guessing which field is wrong.",
+      "expected_effect": null,
+      "risk_level": "safe",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.conflict.flag_only.conflict.salt_sodium_consistency",
+      "issue_type": "constraint",
+      "strategy_id": "flag_only",
+      "finding_id": "conflict.salt_sodium_consistency",
+      "selection_artifact_id": "selection.off_52k_v1.conflict.salt_sodium_consistency",
+      "target_columns": [],
+      "params": {},
+      "reason": "Keep conflicting source values for review rather than guessing which field is wrong.",
+      "expected_effect": null,
+      "risk_level": "safe",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.conflict.flag_only.conflict.saturated_fat_not_above_total_fat",
+      "issue_type": "constraint",
+      "strategy_id": "flag_only",
+      "finding_id": "conflict.saturated_fat_not_above_total_fat",
+      "selection_artifact_id": "selection.off_52k_v1.conflict.saturated_fat_not_above_total_fat",
+      "target_columns": [],
+      "params": {},
+      "reason": "Keep conflicting source values for review rather than guessing which field is wrong.",
+      "expected_effect": null,
+      "risk_level": "safe",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.conflict.flag_only.conflict.sugars_not_above_carbohydrates",
+      "issue_type": "constraint",
+      "strategy_id": "flag_only",
+      "finding_id": "conflict.sugars_not_above_carbohydrates",
+      "selection_artifact_id": "selection.off_52k_v1.conflict.sugars_not_above_carbohydrates",
+      "target_columns": [],
+      "params": {},
+      "reason": "Keep conflicting source values for review rather than guessing which field is wrong.",
+      "expected_effect": null,
+      "risk_level": "safe",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.format.leave_unchanged.code",
+      "issue_type": "format",
+      "strategy_id": "leave_unchanged",
+      "finding_id": "format.regex.code",
+      "selection_artifact_id": "selection.off_52k_v1.format.regex.code",
+      "target_columns": [
+        "code"
+      ],
+      "params": {},
+      "reason": "Preserve the identifier verbatim; invalid barcodes remain visibly flagged for review.",
+      "expected_effect": null,
+      "risk_level": "safe",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.label.exclude_from_training.nutriscore_grade",
+      "issue_type": "label",
+      "strategy_id": "exclude_from_training",
+      "finding_id": "label.unavailable.nutriscore_grade",
+      "selection_artifact_id": "selection.off_52k_v1.label.unavailable.nutriscore_grade",
+      "target_columns": [
+        "nutriscore_grade"
+      ],
+      "params": {},
+      "reason": "Exclude unavailable labels from supervised training without inventing labels.",
+      "expected_effect": null,
+      "risk_level": "safe",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v2.imbalance.class_weight",
+      "issue_type": "imbalance",
+      "strategy_id": "class_weight",
+      "finding_id": "imbalance.nutriscore_grade",
+      "selection_artifact_id": null,
+      "target_columns": [
+        "nutriscore_grade"
+      ],
+      "params": {
+        "target_column": "nutriscore_grade"
+      },
+      "reason": "Record inverse-frequency class weights; do not resample rows in the baseline dataset.",
+      "expected_effect": null,
+      "risk_level": "safe",
+      "requires_confirmation": false,
+      "metadata": {},
+      "created_at": "2026-10-29T09:44:00.493055Z"
+    }
+  ],
+  "dry_run": true,
+  "output_dataset_id": "off_52k_v2",
+  "description": "Conservative clustering baseline: remove duplicate codes; fill core numeric nutrition fields using paired-field derivations and median fallback; keep textual missingness; flag outliers/conflicts/formats; exclude unavailable labels from training; report class weights without resampling.",
+  "metadata": {
+    "policy": "conservative_baseline",
+    "deduplication_key": [
+      "code"
+    ],
+    "median_fallbacks": {
+      "energy-kcal_100g": 261.0,
+      "fat_100g": 6.9,
+      "saturated-fat_100g": 1.7,
+      "carbohydrates_100g": 16.1,
+      "sugars_100g": 3.57,
+      "proteins_100g": 6.0,
+      "fiber_100g": 1.5,
+      "salt_100g": 0.52
+    },
+    "paired_derivations": [
+      "energy-kcal_100g <-> energy_100g",
+      "salt_100g <-> sodium_100g",
+      "fat_100g <-> saturated-fat_100g",
+      "carbohydrates_100g <-> sugars_100g"
+    ],
+    "intentionally_not_overwritten": [
+      "outliers",
+      "field_conflicts",
+      "invalid_barcodes"
+    ],
+    "not_for_supervised_truth": [
+      "unavailable_labels"
+    ]
+  },
+  "created_at": "2026-10-29T09:44:00.493055Z"
+}
