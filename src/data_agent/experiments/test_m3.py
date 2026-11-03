@@ -22,20 +22,30 @@ class M3Tests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.before = load_input("1", project_root=ROOT)
-        cls.after = load_input("2", project_root=ROOT)
+        cls.after = load_input("5", project_root=ROOT)
+        cls.baseline = load_input("2", project_root=ROOT)
         cls.summaries = [json.loads((ROOT / path).read_text(encoding="utf-8")) for path in
-                         ("logs/checks/off_52k_v1_quality_summary.json", "logs/checks_v2/off_52k_v2_quality_summary.json")]
+                         ("logs/checks/off_52k_v1_quality_summary.json", "logs/checks_v5/off_52k_v5_quality_summary.json")]
+        cls.baseline_summaries = [json.loads((ROOT / path).read_text(encoding="utf-8")) for path in
+                                  ("logs/checks/off_52k_v1_quality_summary.json", "logs/checks_v2/off_52k_v2_quality_summary.json")]
 
     def test_quality_metrics_and_missing_or_failed_check(self):
-        result = compare_quality(self.before, self.after, *self.summaries, change_path=ROOT / "data/processed/change.off_52k_v2_conservative.changes.parquet")
+        result = compare_quality(self.before, self.after, *self.summaries)
         self.assertEqual(result["completeness"]["semantic_missing_including_physical_cells"]["absolute_change"], 173016-297441)
         self.assertEqual(result["completeness"]["physical_null_cells"]["before"], int(self.before.frame.isna().sum().sum()))
         self.assertNotEqual(result["completeness"]["physical_null_cells"]["before"], result["completeness"]["semantic_missing_including_physical_cells"]["before"])
         self.assertEqual(result["uniqueness"]["redundant_rows"]["before"], 2000)
         self.assertEqual(result["range_validity"]["affected_rows"]["status"], "unavailable")
+        self.assertEqual(result["range_validity"]["range_flagged_cells"]["after"], 0)
+        self.assertEqual(result["field_consistency"]["affected_rows_union"]["after"], 0)
         self.assertEqual(result["retention"]["common_row_ids"], 50000)
         self.assertAlmostEqual(result["retention"]["retained_before_fraction"], 50000/52000)
-        self.assertEqual(result["modifications"]["deleted_row_ids"], 2000)
+        self.assertEqual(result["modifications"]["status"], "unavailable")
+        baseline = compare_quality(
+            self.before, self.baseline, *self.baseline_summaries,
+            change_path=ROOT / "data/processed/change.off_52k_v2_conservative.changes.parquet",
+        )
+        self.assertEqual(baseline["modifications"]["deleted_row_ids"], 2000)
         changed = copy.deepcopy(self.summaries[1])
         changed["checks"]["missing"]["status"] = "failed"
         changed["checks"]["missing"]["summary"]["missing_cells"] = 0

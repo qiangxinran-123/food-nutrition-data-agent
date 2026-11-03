@@ -48,7 +48,7 @@ class ProfilingTests(unittest.TestCase):
             column_count=4,
         )
 
-    def test_profile_merges_config_and_infers_statistics(self) -> None:
+    def test_profile_merges_config_without_scanning_statistics(self) -> None:
         profile = build_schema_profile(self.reference, self.frame, self.config)
         columns = {column.name: column for column in profile.columns}
 
@@ -58,7 +58,10 @@ class ProfilingTests(unittest.TestCase):
         self.assertTrue(columns["code"].unique)
         self.assertEqual(columns["grade"].missing_tokens, ["unknown"])
         self.assertEqual(columns["energy"].unit, "kcal/100g")
-        self.assertEqual(columns["energy"].metadata["null_count"], 1)
+        self.assertNotIn("null_count", columns["energy"].metadata)
+        self.assertNotIn("null_rate", columns["energy"].metadata)
+        self.assertNotIn("unique_count", columns["energy"].metadata)
+        self.assertNotIn("median", columns["energy"].metadata)
         self.assertEqual(profile.primary_key_candidates, [["code"]])
         self.assertEqual(profile.metadata["row_count"], 2)
 

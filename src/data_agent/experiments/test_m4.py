@@ -24,7 +24,8 @@ class M4Tests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.before = load_input('1', project_root=ROOT)
-        cls.after = load_input('2', project_root=ROOT)
+        cls.after = load_input('5', project_root=ROOT)
+        cls.historical_after = load_input('2', project_root=ROOT)
 
     def test_protocol_and_minimal_A(self):
         protocol = ExperimentProtocol()
@@ -42,7 +43,11 @@ class M4Tests(unittest.TestCase):
     def test_B_provenance(self):
         evidence = verify_fixed_strategy(ROOT, self.before, self.after)
         self.assertEqual(evidence['status'], 'verified')
-        self.assertEqual(evidence['decision_count'], len(read_json(ROOT/'config/plans/off_52k_v2_conservative.json')['decisions']))
+        plan_ids = ('off_52k_v2_conservative', 'off_52k_v3_stratified_repair',
+                    'off_52k_v4_convergence', 'off_52k_v5_precision_finalization')
+        expected = sum(len(read_json(ROOT/'config/plans'/f'{name}.json')['decisions']) for name in plan_ids)
+        self.assertEqual(evidence['versions'], ['2', '3', '4', '5'])
+        self.assertEqual(evidence['decision_count'], expected)
         bad = copy.deepcopy(self.after.manifest)
         bad['parent']['sha256'] = '0'*64
         with self.assertRaises(ValueError):
@@ -113,7 +118,7 @@ class M4Tests(unittest.TestCase):
         self.assertEqual(payload['groups']['C']['status'],'not_available')
         self.assertTrue(all(x['status']=='comparable' for x in payload['clustering_comparisons']))
         groups=[]
-        for name,dataset in [('A',self.before),('B',self.after)]:
+        for name,dataset in [('A',self.before),('B',self.historical_after)]:
             ids=pd.read_csv(run/name/'cohort.csv')['row_id'].tolist()
             subset=dataset.frame.set_index(dataset.row_id_column,drop=False).loc[ids].reset_index(drop=True)
             groups.append(load_cluster_group(replace(dataset,frame=subset),run/name,5))
@@ -124,16 +129,30 @@ class M4Tests(unittest.TestCase):
         before_hash=sha256_file(run/'strategies.json')
         with tempfile.TemporaryDirectory() as tmp:
             target=Path(tmp)/'report'
-            md=generate_report(run/'strategies.json',ROOT/'outputs/clustering/m1_20261029_run03',ROOT/'outputs/clustering/m2_20261029_k5_run02',target)
+            localized=copy.deepcopy(payload)
+            old_root='C:\\Users\\27969\\Desktop\\data_mining'
+            def localize(value):
+                if isinstance(value,dict):
+                    for key,item in value.items():
+                        if key in ('path','metrics_file') and isinstance(item,str) and item.startswith(old_root):
+                            value[key]=str(ROOT/item[len(old_root):].lstrip('\\/'))
+                        else:
+                            localize(item)
+                elif isinstance(value,list):
+                    for item in value: localize(item)
+            localize(localized)
+            localized_path=Path(tmp)/'strategies_local.json'
+            write_json(localized_path,localized)
+            md=generate_report(localized_path,ROOT/'outputs/clustering/m1_20261029_run03',ROOT/'outputs/clustering/m2_20261029_k5_run02',target)
             report=read_json(target/'report.json')
-            self.assertEqual(report['strategies'],payload)
+            self.assertEqual(report['strategies'],localized)
             text=md.read_text(encoding='utf-8')
             self.assertIn(str(payload['protocol']['common_rows']),text)
             self.assertIn('不可计算',text)
             self.assertIn('不是',text)
             for rel,digest in read_json(target/'manifest.json')['files'].items(): self.assertEqual(sha256_file(target/rel),digest)
-            with self.assertRaises(FileExistsError): generate_report(run/'strategies.json',ROOT/'outputs/clustering/m1_20261029_run03',ROOT/'outputs/clustering/m2_20261029_k5_run02',target)
-            corrupted=copy.deepcopy(payload); corrupted['sources'][0]['sha256']='0'*64
+            with self.assertRaises(FileExistsError): generate_report(localized_path,ROOT/'outputs/clustering/m1_20261029_run03',ROOT/'outputs/clustering/m2_20261029_k5_run02',target)
+            corrupted=copy.deepcopy(localized); corrupted['sources'][0]['sha256']='0'*64
             write_json(Path(tmp)/'corrupt.json',corrupted)
             with self.assertRaises(ValueError): generate_report(Path(tmp)/'corrupt.json',ROOT/'outputs/clustering/m1_20261029_run03',ROOT/'outputs/clustering/m2_20261029_k5_run02',Path(tmp)/'badreport')
         self.assertEqual(before_hash,sha256_file(run/'strategies.json'))

@@ -9,7 +9,7 @@ class ClusterConfig(BaseModel):
     model_config = ConfigDict(extra="forbid", validate_assignment=True)
 
     dataset_id: str = Field(min_length=1)
-    dataset_version: Literal["1", "2"]
+    dataset_version: Literal["1", "2", "3", "4", "5"]
     data_sha256: str = Field(pattern=r"^[a-fA-F0-9]{64}$")
     profile_path: str = Field(min_length=1)
     manifest_path: str = Field(min_length=1)

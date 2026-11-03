@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[3]
 
 class M0Tests(unittest.TestCase):
     def test_real_versions_and_identity(self):
-        for version, rows in (("1", 52000), ("2", 50000)):
+        for version, rows in (("1", 52000), ("2", 50000), ("5", 50000)):
             with self.subTest(version=version):
                 data = load_input(version, project_root=ROOT)
                 self.assertEqual((len(data.frame), len(data.columns)), (rows, 20))
@@ -25,7 +25,7 @@ class M0Tests(unittest.TestCase):
 
     def test_unknown_version(self):
         with self.assertRaisesRegex(ValueError, "unsupported dataset version"):
-            load_input("3", project_root=ROOT)
+            load_input("6", project_root=ROOT)
 
     def test_config_validation(self):
         args = dict(dataset_id="off_52k_v1", dataset_version="1", data_sha256="a" * 64,
@@ -33,7 +33,7 @@ class M0Tests(unittest.TestCase):
                     features=["fat_100g"], algorithm="future", artifact_path="outputs/clustering/run")
         self.assertEqual(ClusterConfig(**args).random_state, 42)
         for changes in ({"data_sha256": "bad"}, {"features": ["fat_100g", "fat_100g"]},
-                        {"features": ["__row_id"]}, {"random_state": -1}, {"dataset_version": "3"}):
+                        {"features": ["__row_id"]}, {"random_state": -1}, {"dataset_version": "6"}):
             with self.subTest(changes=changes), self.assertRaises(ValidationError):
                 ClusterConfig(**(args | changes))
 

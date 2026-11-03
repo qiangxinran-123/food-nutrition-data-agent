@@ -1,0 +1,923 @@
+{
+  "contract_version": "0.1",
+  "plan_id": "off_52k_v3_stratified_repair",
+  "before_dataset": {
+    "contract_version": "0.1",
+    "dataset_id": "off_52k_v2",
+    "version": "2",
+    "uri": "data/processed/off_52k_v2.parquet",
+    "format": "parquet",
+    "sha256": "b1f89f0d71229b86a9dad8892c09285721e8f0f1f70020c6a06698ade56dd85a",
+    "row_count": 50000,
+    "column_count": 20,
+    "source": null,
+    "parent_id": null,
+    "created_at": "2026-11-01T14:33:34.034511Z",
+    "metadata": {
+      "manifest_status": "processed",
+      "processing": {
+        "cleaning_applied": true,
+        "description": "Conservative clustering baseline: remove duplicate codes; fill core numeric nutrition fields using paired-field derivations and median fallback; keep textual missingness; flag outliers/conflicts/formats; exclude unavailable labels from training; report class weights without resampling.",
+        "change_id": "change.off_52k_v2_conservative"
+      },
+      "schema": {}
+    }
+  },
+  "decisions": [
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v3.range_repair.energy-kcal_100g.quarantine",
+      "issue_type": "outlier",
+      "strategy_id": "quarantine_cell",
+      "finding_id": "outlier.range.energy-kcal_100g",
+      "selection_artifact_id": "selection.off_52k_v2.outlier.range.energy-kcal_100g",
+      "target_columns": [
+        "energy-kcal_100g"
+      ],
+      "params": {
+        "artifact_name": "hard_range_invalid_values"
+      },
+      "reason": "Treat a value outside the declared physical/business range as invalid, preserve the old value in quarantine, and set the cell to null before imputation.",
+      "expected_effect": "Remove impossible hard-range values without inventing a repair value in the same step.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v2",
+        "repair_policy": "hard_range_quarantine_then_missing"
+      },
+      "created_at": "2026-11-01T14:33:34.029304Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v3.range_repair.energy_100g.quarantine",
+      "issue_type": "outlier",
+      "strategy_id": "quarantine_cell",
+      "finding_id": "outlier.range.energy_100g",
+      "selection_artifact_id": "selection.off_52k_v2.outlier.range.energy_100g",
+      "target_columns": [
+        "energy_100g"
+      ],
+      "params": {
+        "artifact_name": "hard_range_invalid_values"
+      },
+      "reason": "Treat a value outside the declared physical/business range as invalid, preserve the old value in quarantine, and set the cell to null before imputation.",
+      "expected_effect": "Remove impossible hard-range values without inventing a repair value in the same step.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v2",
+        "repair_policy": "hard_range_quarantine_then_missing"
+      },
+      "created_at": "2026-11-01T14:33:34.029304Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v3.range_repair.carbohydrates_100g.quarantine",
+      "issue_type": "outlier",
+      "strategy_id": "quarantine_cell",
+      "finding_id": "outlier.range.carbohydrates_100g",
+      "selection_artifact_id": "selection.off_52k_v2.outlier.range.carbohydrates_100g",
+      "target_columns": [
+        "carbohydrates_100g"
+      ],
+      "params": {
+        "artifact_name": "hard_range_invalid_values"
+      },
+      "reason": "Treat a value outside the declared physical/business range as invalid, preserve the old value in quarantine, and set the cell to null before imputation.",
+      "expected_effect": "Remove impossible hard-range values without inventing a repair value in the same step.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v2",
+        "repair_policy": "hard_range_quarantine_then_missing"
+      },
+      "created_at": "2026-11-01T14:33:34.029304Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v3.range_repair.fat_100g.quarantine",
+      "issue_type": "outlier",
+      "strategy_id": "quarantine_cell",
+      "finding_id": "outlier.range.fat_100g",
+      "selection_artifact_id": "selection.off_52k_v2.outlier.range.fat_100g",
+      "target_columns": [
+        "fat_100g"
+      ],
+      "params": {
+        "artifact_name": "hard_range_invalid_values"
+      },
+      "reason": "Treat a value outside the declared physical/business range as invalid, preserve the old value in quarantine, and set the cell to null before imputation.",
+      "expected_effect": "Remove impossible hard-range values without inventing a repair value in the same step.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v2",
+        "repair_policy": "hard_range_quarantine_then_missing"
+      },
+      "created_at": "2026-11-01T14:33:34.029304Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v3.range_repair.sugars_100g.quarantine",
+      "issue_type": "outlier",
+      "strategy_id": "quarantine_cell",
+      "finding_id": "outlier.range.sugars_100g",
+      "selection_artifact_id": "selection.off_52k_v2.outlier.range.sugars_100g",
+      "target_columns": [
+        "sugars_100g"
+      ],
+      "params": {
+        "artifact_name": "hard_range_invalid_values"
+      },
+      "reason": "Treat a value outside the declared physical/business range as invalid, preserve the old value in quarantine, and set the cell to null before imputation.",
+      "expected_effect": "Remove impossible hard-range values without inventing a repair value in the same step.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v2",
+        "repair_policy": "hard_range_quarantine_then_missing"
+      },
+      "created_at": "2026-11-01T14:33:34.029304Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v3.range_repair.proteins_100g.quarantine",
+      "issue_type": "outlier",
+      "strategy_id": "quarantine_cell",
+      "finding_id": "outlier.range.proteins_100g",
+      "selection_artifact_id": "selection.off_52k_v2.outlier.range.proteins_100g",
+      "target_columns": [
+        "proteins_100g"
+      ],
+      "params": {
+        "artifact_name": "hard_range_invalid_values"
+      },
+      "reason": "Treat a value outside the declared physical/business range as invalid, preserve the old value in quarantine, and set the cell to null before imputation.",
+      "expected_effect": "Remove impossible hard-range values without inventing a repair value in the same step.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v2",
+        "repair_policy": "hard_range_quarantine_then_missing"
+      },
+      "created_at": "2026-11-01T14:33:34.029304Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v3.range_repair.salt_100g.quarantine",
+      "issue_type": "outlier",
+      "strategy_id": "quarantine_cell",
+      "finding_id": "outlier.range.salt_100g",
+      "selection_artifact_id": "selection.off_52k_v2.outlier.range.salt_100g",
+      "target_columns": [
+        "salt_100g"
+      ],
+      "params": {
+        "artifact_name": "hard_range_invalid_values"
+      },
+      "reason": "Treat a value outside the declared physical/business range as invalid, preserve the old value in quarantine, and set the cell to null before imputation.",
+      "expected_effect": "Remove impossible hard-range values without inventing a repair value in the same step.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v2",
+        "repair_policy": "hard_range_quarantine_then_missing"
+      },
+      "created_at": "2026-11-01T14:33:34.029304Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v3.range_repair.saturated-fat_100g.quarantine",
+      "issue_type": "outlier",
+      "strategy_id": "quarantine_cell",
+      "finding_id": "outlier.range.saturated-fat_100g",
+      "selection_artifact_id": "selection.off_52k_v2.outlier.range.saturated-fat_100g",
+      "target_columns": [
+        "saturated-fat_100g"
+      ],
+      "params": {
+        "artifact_name": "hard_range_invalid_values"
+      },
+      "reason": "Treat a value outside the declared physical/business range as invalid, preserve the old value in quarantine, and set the cell to null before imputation.",
+      "expected_effect": "Remove impossible hard-range values without inventing a repair value in the same step.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v2",
+        "repair_policy": "hard_range_quarantine_then_missing"
+      },
+      "created_at": "2026-11-01T14:33:34.029304Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v3.range_repair.sodium_100g.quarantine",
+      "issue_type": "outlier",
+      "strategy_id": "quarantine_cell",
+      "finding_id": "outlier.range.sodium_100g",
+      "selection_artifact_id": "selection.off_52k_v2.outlier.range.sodium_100g",
+      "target_columns": [
+        "sodium_100g"
+      ],
+      "params": {
+        "artifact_name": "hard_range_invalid_values"
+      },
+      "reason": "Treat a value outside the declared physical/business range as invalid, preserve the old value in quarantine, and set the cell to null before imputation.",
+      "expected_effect": "Remove impossible hard-range values without inventing a repair value in the same step.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v2",
+        "repair_policy": "hard_range_quarantine_then_missing"
+      },
+      "created_at": "2026-11-01T14:33:34.029304Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v3.range_repair.fiber_100g.quarantine",
+      "issue_type": "outlier",
+      "strategy_id": "quarantine_cell",
+      "finding_id": "outlier.range.fiber_100g",
+      "selection_artifact_id": "selection.off_52k_v2.outlier.range.fiber_100g",
+      "target_columns": [
+        "fiber_100g"
+      ],
+      "params": {
+        "artifact_name": "hard_range_invalid_values"
+      },
+      "reason": "Treat a value outside the declared physical/business range as invalid, preserve the old value in quarantine, and set the cell to null before imputation.",
+      "expected_effect": "Remove impossible hard-range values without inventing a repair value in the same step.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v2",
+        "repair_policy": "hard_range_quarantine_then_missing"
+      },
+      "created_at": "2026-11-01T14:33:34.029304Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v3.range_repair.energy-kcal_100g.kcal_from_kj",
+      "issue_type": "missing",
+      "strategy_id": "derive_from_formula",
+      "finding_id": "range_repair.energy-kcal_100g.kcal_from_kj",
+      "selection_artifact_id": "selection.off_52k_v2.outlier.range.energy-kcal_100g",
+      "target_columns": [
+        "energy-kcal_100g"
+      ],
+      "params": {
+        "target_column": "energy-kcal_100g",
+        "expression": "col(\"energy_100g\") / 4.184",
+        "round_digits": 6
+      },
+      "reason": "Fill an invalid kcal cell from the paired kJ field.",
+      "expected_effect": "Replace an invalid hard-range cell with a derived value, then a column statistic when derivation is unavailable.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v2",
+        "repair_policy": "hard_range_null_then_impute"
+      },
+      "created_at": "2026-11-01T14:33:34.029304Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v3.range_repair.energy_100g.kj_from_kcal",
+      "issue_type": "missing",
+      "strategy_id": "derive_from_formula",
+      "finding_id": "range_repair.energy_100g.kj_from_kcal",
+      "selection_artifact_id": "selection.off_52k_v2.outlier.range.energy_100g",
+      "target_columns": [
+        "energy_100g"
+      ],
+      "params": {
+        "target_column": "energy_100g",
+        "expression": "col(\"energy-kcal_100g\") * 4.184",
+        "round_digits": 6
+      },
+      "reason": "Fill an invalid kJ cell from the paired kcal field.",
+      "expected_effect": "Replace an invalid hard-range cell with a derived value, then a column statistic when derivation is unavailable.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v2",
+        "repair_policy": "hard_range_null_then_impute"
+      },
+      "created_at": "2026-11-01T14:33:34.029304Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v3.range_repair.energy-kcal_100g.median_fallback",
+      "issue_type": "missing",
+      "strategy_id": "impute_statistic",
+      "finding_id": "range_repair.energy-kcal_100g.median_fallback",
+      "selection_artifact_id": "selection.off_52k_v2.outlier.range.energy-kcal_100g",
+      "target_columns": [
+        "energy-kcal_100g"
+      ],
+      "params": {
+        "method": "median"
+      },
+      "reason": "Median-fill invalid kcal cells when neither energy field is usable.",
+      "expected_effect": "Replace an invalid hard-range cell with a derived value, then a column statistic when derivation is unavailable.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v2",
+        "repair_policy": "hard_range_null_then_impute"
+      },
+      "created_at": "2026-11-01T14:33:34.029304Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v3.range_repair.energy_100g.kj_after_median",
+      "issue_type": "missing",
+      "strategy_id": "derive_from_formula",
+      "finding_id": "range_repair.energy_100g.kj_after_median",
+      "selection_artifact_id": "selection.off_52k_v2.outlier.range.energy_100g",
+      "target_columns": [
+        "energy_100g"
+      ],
+      "params": {
+        "target_column": "energy_100g",
+        "expression": "col(\"energy-kcal_100g\") * 4.184",
+        "round_digits": 6
+      },
+      "reason": "Derive kJ again after the kcal fallback so the pair stays consistent.",
+      "expected_effect": "Replace an invalid hard-range cell with a derived value, then a column statistic when derivation is unavailable.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v2",
+        "repair_policy": "hard_range_null_then_impute"
+      },
+      "created_at": "2026-11-01T14:33:34.029304Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v3.range_repair.sodium_100g.sodium_from_salt",
+      "issue_type": "missing",
+      "strategy_id": "derive_from_formula",
+      "finding_id": "range_repair.sodium_100g.sodium_from_salt",
+      "selection_artifact_id": "selection.off_52k_v2.outlier.range.sodium_100g",
+      "target_columns": [
+        "sodium_100g"
+      ],
+      "params": {
+        "target_column": "sodium_100g",
+        "expression": "col(\"salt_100g\") / 2.5",
+        "round_digits": 6
+      },
+      "reason": "Fill an invalid sodium cell from the paired salt field.",
+      "expected_effect": "Replace an invalid hard-range cell with a derived value, then a column statistic when derivation is unavailable.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v2",
+        "repair_policy": "hard_range_null_then_impute"
+      },
+      "created_at": "2026-11-01T14:33:34.029304Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v3.range_repair.salt_100g.salt_from_sodium",
+      "issue_type": "missing",
+      "strategy_id": "derive_from_formula",
+      "finding_id": "range_repair.salt_100g.salt_from_sodium",
+      "selection_artifact_id": "selection.off_52k_v2.outlier.range.salt_100g",
+      "target_columns": [
+        "salt_100g"
+      ],
+      "params": {
+        "target_column": "salt_100g",
+        "expression": "col(\"sodium_100g\") * 2.5",
+        "round_digits": 6
+      },
+      "reason": "Fill an invalid salt cell from the paired sodium field.",
+      "expected_effect": "Replace an invalid hard-range cell with a derived value, then a column statistic when derivation is unavailable.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v2",
+        "repair_policy": "hard_range_null_then_impute"
+      },
+      "created_at": "2026-11-01T14:33:34.029304Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v3.range_repair.sodium_100g.median_fallback",
+      "issue_type": "missing",
+      "strategy_id": "impute_statistic",
+      "finding_id": "range_repair.sodium_100g.median_fallback",
+      "selection_artifact_id": "selection.off_52k_v2.outlier.range.sodium_100g",
+      "target_columns": [
+        "sodium_100g"
+      ],
+      "params": {
+        "method": "median"
+      },
+      "reason": "Median-fill invalid sodium cells when neither salt field is usable.",
+      "expected_effect": "Replace an invalid hard-range cell with a derived value, then a column statistic when derivation is unavailable.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v2",
+        "repair_policy": "hard_range_null_then_impute"
+      },
+      "created_at": "2026-11-01T14:33:34.029304Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v3.range_repair.salt_100g.salt_after_median",
+      "issue_type": "missing",
+      "strategy_id": "derive_from_formula",
+      "finding_id": "range_repair.salt_100g.salt_after_median",
+      "selection_artifact_id": "selection.off_52k_v2.outlier.range.salt_100g",
+      "target_columns": [
+        "salt_100g"
+      ],
+      "params": {
+        "target_column": "salt_100g",
+        "expression": "col(\"sodium_100g\") * 2.5",
+        "round_digits": 6
+      },
+      "reason": "Derive salt again after the sodium fallback so the pair stays consistent.",
+      "expected_effect": "Replace an invalid hard-range cell with a derived value, then a column statistic when derivation is unavailable.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v2",
+        "repair_policy": "hard_range_null_then_impute"
+      },
+      "created_at": "2026-11-01T14:33:34.029304Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v3.range_repair.proteins_100g.median_fallback",
+      "issue_type": "missing",
+      "strategy_id": "impute_statistic",
+      "finding_id": "range_repair.proteins_100g.median_fallback",
+      "selection_artifact_id": "selection.off_52k_v2.outlier.range.proteins_100g",
+      "target_columns": [
+        "proteins_100g"
+      ],
+      "params": {
+        "method": "median"
+      },
+      "reason": "Median-fill an invalid hard-range cell when no reliable paired-field formula exists.",
+      "expected_effect": "Replace an invalid hard-range cell with a derived value, then a column statistic when derivation is unavailable.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v2",
+        "repair_policy": "hard_range_null_then_impute"
+      },
+      "created_at": "2026-11-01T14:33:34.029304Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v3.range_repair.fat_100g.median_fallback",
+      "issue_type": "missing",
+      "strategy_id": "impute_statistic",
+      "finding_id": "range_repair.fat_100g.median_fallback",
+      "selection_artifact_id": "selection.off_52k_v2.outlier.range.fat_100g",
+      "target_columns": [
+        "fat_100g"
+      ],
+      "params": {
+        "method": "median"
+      },
+      "reason": "Median-fill an invalid hard-range cell when no reliable paired-field formula exists.",
+      "expected_effect": "Replace an invalid hard-range cell with a derived value, then a column statistic when derivation is unavailable.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v2",
+        "repair_policy": "hard_range_null_then_impute"
+      },
+      "created_at": "2026-11-01T14:33:34.029304Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v3.range_repair.saturated-fat_100g.median_fallback",
+      "issue_type": "missing",
+      "strategy_id": "impute_statistic",
+      "finding_id": "range_repair.saturated-fat_100g.median_fallback",
+      "selection_artifact_id": "selection.off_52k_v2.outlier.range.saturated-fat_100g",
+      "target_columns": [
+        "saturated-fat_100g"
+      ],
+      "params": {
+        "method": "median"
+      },
+      "reason": "Median-fill an invalid hard-range cell when no reliable paired-field formula exists.",
+      "expected_effect": "Replace an invalid hard-range cell with a derived value, then a column statistic when derivation is unavailable.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v2",
+        "repair_policy": "hard_range_null_then_impute"
+      },
+      "created_at": "2026-11-01T14:33:34.029304Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v3.range_repair.carbohydrates_100g.median_fallback",
+      "issue_type": "missing",
+      "strategy_id": "impute_statistic",
+      "finding_id": "range_repair.carbohydrates_100g.median_fallback",
+      "selection_artifact_id": "selection.off_52k_v2.outlier.range.carbohydrates_100g",
+      "target_columns": [
+        "carbohydrates_100g"
+      ],
+      "params": {
+        "method": "median"
+      },
+      "reason": "Median-fill an invalid hard-range cell when no reliable paired-field formula exists.",
+      "expected_effect": "Replace an invalid hard-range cell with a derived value, then a column statistic when derivation is unavailable.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v2",
+        "repair_policy": "hard_range_null_then_impute"
+      },
+      "created_at": "2026-11-01T14:33:34.029304Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v3.range_repair.sugars_100g.median_fallback",
+      "issue_type": "missing",
+      "strategy_id": "impute_statistic",
+      "finding_id": "range_repair.sugars_100g.median_fallback",
+      "selection_artifact_id": "selection.off_52k_v2.outlier.range.sugars_100g",
+      "target_columns": [
+        "sugars_100g"
+      ],
+      "params": {
+        "method": "median"
+      },
+      "reason": "Median-fill an invalid hard-range cell when no reliable paired-field formula exists.",
+      "expected_effect": "Replace an invalid hard-range cell with a derived value, then a column statistic when derivation is unavailable.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v2",
+        "repair_policy": "hard_range_null_then_impute"
+      },
+      "created_at": "2026-11-01T14:33:34.029304Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v3.range_repair.fiber_100g.median_fallback",
+      "issue_type": "missing",
+      "strategy_id": "impute_statistic",
+      "finding_id": "range_repair.fiber_100g.median_fallback",
+      "selection_artifact_id": "selection.off_52k_v2.outlier.range.fiber_100g",
+      "target_columns": [
+        "fiber_100g"
+      ],
+      "params": {
+        "method": "median"
+      },
+      "reason": "Median-fill an invalid hard-range cell when no reliable paired-field formula exists.",
+      "expected_effect": "Replace an invalid hard-range cell with a derived value, then a column statistic when derivation is unavailable.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v2",
+        "repair_policy": "hard_range_null_then_impute"
+      },
+      "created_at": "2026-11-01T14:33:34.029304Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v3.iqr_winsorize.sugars_100g",
+      "issue_type": "outlier",
+      "strategy_id": "clip_value",
+      "finding_id": "outlier.iqr.sugars_100g",
+      "selection_artifact_id": "selection.off_52k_v2.outlier.iqr.sugars_100g",
+      "target_columns": [
+        "sugars_100g"
+      ],
+      "params": {
+        "minimum": -53.0,
+        "maximum": 65.8
+      },
+      "reason": "Winsorize a statistical boxplot tail to the detected lower/upper IQR boundary instead of deleting the row.",
+      "expected_effect": "Keep the observation while capping an extreme tail to the boxplot boundary.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v2",
+        "repair_policy": "iqr_winsorization"
+      },
+      "created_at": "2026-11-01T14:33:34.029304Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v3.iqr_winsorize.salt_100g",
+      "issue_type": "outlier",
+      "strategy_id": "clip_value",
+      "finding_id": "outlier.iqr.salt_100g",
+      "selection_artifact_id": "selection.off_52k_v2.outlier.iqr.salt_100g",
+      "target_columns": [
+        "salt_100g"
+      ],
+      "params": {
+        "minimum": -4.48250002861022,
+        "maximum": 5.66500002384185
+      },
+      "reason": "Winsorize a statistical boxplot tail to the detected lower/upper IQR boundary instead of deleting the row.",
+      "expected_effect": "Keep the observation while capping an extreme tail to the boxplot boundary.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v2",
+        "repair_policy": "iqr_winsorization"
+      },
+      "created_at": "2026-11-01T14:33:34.029304Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v3.iqr_winsorize.sodium_100g",
+      "issue_type": "outlier",
+      "strategy_id": "clip_value",
+      "finding_id": "outlier.iqr.sodium_100g",
+      "selection_artifact_id": "selection.off_52k_v2.outlier.iqr.sodium_100g",
+      "target_columns": [
+        "sodium_100g"
+      ],
+      "params": {
+        "minimum": -1.794,
+        "maximum": 2.265
+      },
+      "reason": "Winsorize a statistical boxplot tail to the detected lower/upper IQR boundary instead of deleting the row.",
+      "expected_effect": "Keep the observation while capping an extreme tail to the boxplot boundary.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v2",
+        "repair_policy": "iqr_winsorization"
+      },
+      "created_at": "2026-11-01T14:33:34.029304Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v3.iqr_winsorize.saturated-fat_100g",
+      "issue_type": "outlier",
+      "strategy_id": "clip_value",
+      "finding_id": "outlier.iqr.saturated-fat_100g",
+      "selection_artifact_id": "selection.off_52k_v2.outlier.iqr.saturated-fat_100g",
+      "target_columns": [
+        "saturated-fat_100g"
+      ],
+      "params": {
+        "minimum": -24.06,
+        "maximum": 29.4
+      },
+      "reason": "Winsorize a statistical boxplot tail to the detected lower/upper IQR boundary instead of deleting the row.",
+      "expected_effect": "Keep the observation while capping an extreme tail to the boxplot boundary.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v2",
+        "repair_policy": "iqr_winsorization"
+      },
+      "created_at": "2026-11-01T14:33:34.029304Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v3.iqr_winsorize.proteins_100g",
+      "issue_type": "outlier",
+      "strategy_id": "clip_value",
+      "finding_id": "outlier.iqr.proteins_100g",
+      "selection_artifact_id": "selection.off_52k_v2.outlier.iqr.proteins_100g",
+      "target_columns": [
+        "proteins_100g"
+      ],
+      "params": {
+        "minimum": -39.45,
+        "maximum": 52.510000000000005
+      },
+      "reason": "Winsorize a statistical boxplot tail to the detected lower/upper IQR boundary instead of deleting the row.",
+      "expected_effect": "Keep the observation while capping an extreme tail to the boxplot boundary.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v2",
+        "repair_policy": "iqr_winsorization"
+      },
+      "created_at": "2026-11-01T14:33:34.029304Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v3.iqr_winsorize.fat_100g",
+      "issue_type": "outlier",
+      "strategy_id": "clip_value",
+      "finding_id": "outlier.iqr.fat_100g",
+      "selection_artifact_id": "selection.off_52k_v2.outlier.iqr.fat_100g",
+      "target_columns": [
+        "fat_100g"
+      ],
+      "params": {
+        "minimum": -79.60000000000001,
+        "maximum": 98.60000000000002
+      },
+      "reason": "Winsorize a statistical boxplot tail to the detected lower/upper IQR boundary instead of deleting the row.",
+      "expected_effect": "Keep the observation while capping an extreme tail to the boxplot boundary.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v2",
+        "repair_policy": "iqr_winsorization"
+      },
+      "created_at": "2026-11-01T14:33:34.029304Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v3.iqr_winsorize.energy-kcal_100g",
+      "issue_type": "outlier",
+      "strategy_id": "clip_value",
+      "finding_id": "outlier.iqr.energy-kcal_100g",
+      "selection_artifact_id": "selection.off_52k_v2.outlier.iqr.energy-kcal_100g",
+      "target_columns": [
+        "energy-kcal_100g"
+      ],
+      "params": {
+        "minimum": -1128.0,
+        "maximum": 1633.0
+      },
+      "reason": "Winsorize a statistical boxplot tail to the detected lower/upper IQR boundary instead of deleting the row.",
+      "expected_effect": "Keep the observation while capping an extreme tail to the boxplot boundary.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v2",
+        "repair_policy": "iqr_winsorization"
+      },
+      "created_at": "2026-11-01T14:33:34.029304Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v3.iqr_winsorize.energy_100g",
+      "issue_type": "outlier",
+      "strategy_id": "clip_value",
+      "finding_id": "outlier.iqr.energy_100g",
+      "selection_artifact_id": "selection.off_52k_v2.outlier.iqr.energy_100g",
+      "target_columns": [
+        "energy_100g"
+      ],
+      "params": {
+        "minimum": -4736.799999999999,
+        "maximum": 6856.0999999999985
+      },
+      "reason": "Winsorize a statistical boxplot tail to the detected lower/upper IQR boundary instead of deleting the row.",
+      "expected_effect": "Keep the observation while capping an extreme tail to the boxplot boundary.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v2",
+        "repair_policy": "iqr_winsorization"
+      },
+      "created_at": "2026-11-01T14:33:34.029304Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v3.iqr_winsorize.carbohydrates_100g",
+      "issue_type": "outlier",
+      "strategy_id": "clip_value",
+      "finding_id": "outlier.iqr.carbohydrates_100g",
+      "selection_artifact_id": "selection.off_52k_v2.outlier.iqr.carbohydrates_100g",
+      "target_columns": [
+        "carbohydrates_100g"
+      ],
+      "params": {
+        "minimum": -208.8,
+        "maximum": 262.0
+      },
+      "reason": "Winsorize a statistical boxplot tail to the detected lower/upper IQR boundary instead of deleting the row.",
+      "expected_effect": "Keep the observation while capping an extreme tail to the boxplot boundary.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v2",
+        "repair_policy": "iqr_winsorization"
+      },
+      "created_at": "2026-11-01T14:33:34.029304Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v3.conflict_repair.energy-kcal_100g",
+      "issue_type": "constraint",
+      "strategy_id": "recompute_derived",
+      "finding_id": "conflict.energy_kcal_kj_consistency",
+      "selection_artifact_id": "selection.off_52k_v2.conflict.energy_kcal_kj_consistency",
+      "target_columns": [
+        "energy-kcal_100g"
+      ],
+      "params": {
+        "target_column": "energy-kcal_100g",
+        "expression": "col(\"energy_100g\") / 4.184",
+        "round_digits": 6
+      },
+      "reason": "Treat kJ as the primary energy field and recompute kcal to enforce the unit relation.",
+      "expected_effect": "Make the conflicting pair satisfy its declared formula or inequality without dropping the row.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v2",
+        "repair_policy": "conflict_recompute_or_cap"
+      },
+      "created_at": "2026-11-01T14:33:34.029304Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v3.conflict_repair.salt_100g",
+      "issue_type": "constraint",
+      "strategy_id": "recompute_derived",
+      "finding_id": "conflict.salt_sodium_consistency",
+      "selection_artifact_id": "selection.off_52k_v2.conflict.salt_sodium_consistency",
+      "target_columns": [
+        "salt_100g"
+      ],
+      "params": {
+        "target_column": "salt_100g",
+        "expression": "col(\"sodium_100g\") * 2.5",
+        "round_digits": 6
+      },
+      "reason": "Treat sodium as the primary salt field and recompute salt to enforce the conversion.",
+      "expected_effect": "Make the conflicting pair satisfy its declared formula or inequality without dropping the row.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v2",
+        "repair_policy": "conflict_recompute_or_cap"
+      },
+      "created_at": "2026-11-01T14:33:34.029304Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v3.conflict_repair.sugars_100g",
+      "issue_type": "constraint",
+      "strategy_id": "recompute_derived",
+      "finding_id": "conflict.sugars_not_above_carbohydrates",
+      "selection_artifact_id": "selection.off_52k_v2.conflict.sugars_not_above_carbohydrates",
+      "target_columns": [
+        "sugars_100g"
+      ],
+      "params": {
+        "target_column": "sugars_100g",
+        "expression": "min(col(\"sugars_100g\"), col(\"carbohydrates_100g\") * 1.05 + 0.5)",
+        "round_digits": 6
+      },
+      "reason": "Cap sugars at the maximum value allowed by total carbohydrates plus measurement tolerance.",
+      "expected_effect": "Make the conflicting pair satisfy its declared formula or inequality without dropping the row.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v2",
+        "repair_policy": "conflict_recompute_or_cap"
+      },
+      "created_at": "2026-11-01T14:33:34.029304Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v3.conflict_repair.saturated-fat_100g",
+      "issue_type": "constraint",
+      "strategy_id": "recompute_derived",
+      "finding_id": "conflict.saturated_fat_not_above_total_fat",
+      "selection_artifact_id": "selection.off_52k_v2.conflict.saturated_fat_not_above_total_fat",
+      "target_columns": [
+        "saturated-fat_100g"
+      ],
+      "params": {
+        "target_column": "saturated-fat_100g",
+        "expression": "min(col(\"saturated-fat_100g\"), col(\"fat_100g\") * 1.05 + 0.5)",
+        "round_digits": 6
+      },
+      "reason": "Cap saturated fat at the maximum value allowed by total fat plus measurement tolerance.",
+      "expected_effect": "Make the conflicting pair satisfy its declared formula or inequality without dropping the row.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v2",
+        "repair_policy": "conflict_recompute_or_cap"
+      },
+      "created_at": "2026-11-01T14:33:34.029304Z"
+    }
+  ],
+  "dry_run": true,
+  "output_dataset_id": "off_52k_v3",
+  "description": "Stratified repair: quarantine impossible hard-range values and impute them, winsorize IQR tails, recompute paired energy/salt fields, and cap bounded child fields instead of treating all anomalies the same way.",
+  "metadata": {
+    "source_dataset": "off_52k_v2",
+    "repair_scope": [
+      "hard_range",
+      "iqr_tails",
+      "field_conflicts"
+    ],
+    "hard_range_policy": "quarantine then formula/median fill",
+    "iqr_policy": "winsorize to detected lower/upper bound",
+    "conflict_policy": "recompute paired fields or cap child field to relation"
+  },
+  "created_at": "2026-11-01T14:33:34.029304Z"
+}

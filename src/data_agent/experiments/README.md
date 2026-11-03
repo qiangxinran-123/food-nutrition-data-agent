@@ -16,7 +16,7 @@ $env:TEMP = (Resolve-Path src/data_agent/experiments/.tmp).Path
 $env:TMP = $env:TEMP
 $env:MPLCONFIGDIR = $env:TEMP
 & $python -m unittest data_agent.experiments.test_m3 -v
-& $python -m data_agent.experiments --project-root . --output outputs/experiments/my_new_m3_run --m1-run outputs/clustering/m1_20261029_run03 --seed 42 --sample-size 2000 --count-per-type 5 --k 5
+& $python -m data_agent.experiments --project-root . --output outputs/experiments/my_new_m3_run --m1-run outputs/clustering/my_v5_m1_run --seed 42 --sample-size 2000 --count-per-type 5 --k 5
 ```
 
 输出目录必须不存在。入口产生质量比较、独立注入 CSV、ground truth、上游检测及选择表、检测评价、聚类可比性结果和带哈希的 manifest；中途失败时保留新目录，重试使用另一个目录。CSV 混有数值和人为格式错误，读取时请用 `load_injection`，它验证与真值关联的哈希并恢复数值、ID 及格式错误。保存的 `ground_truth.json` 除正例还包含规则已知的负例控制与所有匹配键。
@@ -30,10 +30,10 @@ from data_agent.clustering import load_input
 from data_agent.experiments.quality import compare_quality
 
 root = Path.cwd()
-before, after = load_input("1", project_root=root), load_input("2", project_root=root)
+before, after = load_input("1", project_root=root), load_input("5", project_root=root)
 old = json.loads((root / "logs/checks/off_52k_v1_quality_summary.json").read_text(encoding="utf-8"))
-new = json.loads((root / "logs/checks_v2/off_52k_v2_quality_summary.json").read_text(encoding="utf-8"))
-comparison = compare_quality(before, after, old, new, change_path=root / "data/processed/change.off_52k_v2_conservative.changes.parquet")
+new = json.loads((root / "logs/checks_v5/off_52k_v5_quality_summary.json").read_text(encoding="utf-8"))
+comparison = compare_quality(before, after, old, new)
 ```
 
 汇总必须与数据集 ID/哈希一致；相关检测未成功、信息缺失或规则不一致时，该维度不可计算。物理 null 单独通过 DataFrame 统计；语义缺失总数包含物理 null，语义专有数是总数减物理 null。重复使用上游冗余行数，而非重复组全部成员。范围数是范围违规单元格，不是行数；上游的异常行并集同时包含统计异常，因此范围专有的受影响行不可计算。冲突行是多个规则的行并集，不是 findings 数或单元格数；各规则有效检测行数随版本而变化。填充及删除来自经哈希和父数据版本核验的变更表，填充比例分母为清洗前总单元格数。数量下降不能证明修复正确。
@@ -62,7 +62,7 @@ evaluation = evaluate_injected_errors(loaded, detections)
 
 ```python
 from data_agent.experiments.clustering import load_cluster_group, compare_clustering
-group_a = load_cluster_group(after, "outputs/clustering/m1_20261029_run03", 5)
+group_a = load_cluster_group(after, "outputs/clustering/my_v5_m1_run", 5)
 # group_b = load_cluster_group(other_dataset, "other_existing_m1_run", 5)
 comparison = compare_clustering([group_a])  # 只有一组时明确不可比较
 # comparison = compare_clustering([group_a, group_b])
@@ -89,14 +89,17 @@ generate_report(new_output_dir / "strategies.json", existing_m1_directory,
 运行完整 M4（先执行本文前面的环境设置；无需额外安装依赖）：
 
 ```powershell
-& $python -m data_agent.experiments.run_m4 --project-root . --output outputs/experiments/my_new_m4_run
+& $python -m data_agent.experiments.run_m4 --project-root . --output outputs/experiments/my_new_m4_run `
+  --m1-run outputs/clustering/my_v5_m1_run `
+  --m2-run outputs/clustering/my_v5_m2_run `
+  --m3-run outputs/experiments/my_v5_m3_run
 ```
 
-默认复用 `m1_20261029_run03`、`m2_20261029_k5_run02`、`m3_20261029_run03`；可通过 `--m1-run`、`--m2-run`、`--m3-run` 指定其他已经核验的目录。输出根目录必须不存在。`protocol_input.json` 可用 `--protocol` 重新传入，包含可验证的完整参数；`protocol.json` 还记录实际队列、原始数据和标准化规则。`strategies.json` 是机器评价结果，`comparison.csv` 是共同样本指标表，`A/`、`B/` 保存分别真实训练的标签、中心、scaler 和评价；`report/` 保存中文 Markdown、统一 JSON 和便携图表副本；`delivery_manifest.json` 提供交付文件与实现代码的 SHA256。
+M4 必须显式传入同一 v5 数据版本生成的 `--m1-run`、`--m2-run`、`--m3-run`；旧的 `m1_20261029_run03`、`m2_20261029_k5_run02`、`m3_20261029_run03` 均为 v2 历史产物，不能与 v5 混用。输出根目录必须不存在。`protocol_input.json` 可用 `--protocol` 重新传入，包含可验证的完整参数；`protocol.json` 还记录实际队列、原始数据和标准化规则。`strategies.json` 是机器评价结果，`comparison.csv` 是共同样本指标表，`A/`、`B/` 保存分别真实训练的标签、中心、scaler 和评价；`report/` 保存中文 Markdown、统一 JSON 和便携图表副本；`delivery_manifest.json` 提供交付文件与实现代码的 SHA256。
 
-协议固定 M1 的八特征和 k=2–8，默认种子 42/7/21、n_init=10、max_iter=300、tol=1e-4。A 只作 M1 完整有限数值筛选；B 复用 v2 并核验 v1 父数据、53 步计划与运行记录、最终落盘状态及变更表哈希。A/B 主对照预先限制到共有可建模行 ID，按相同顺序各自真实训练；在 A 未清洗共同队列上 fit 一次 StandardScaler，B 只 transform。共有队列筛选属于实验范围，不属于额外清洗。各组全量数据质量、完整案例可用率和共同队列保留率分别保存。
+协议固定 M1 的八特征和 k=2–8，默认种子 42/7/21、n_init=10、max_iter=300、tol=1e-4。A 只作 M1 完整有限数值筛选；B 复用 v5，并核验 `v2 → v3 → v4 → v5` 四份计划、运行记录、数据哈希、变更表和 profile 组成的完整链。A/B 主对照预先限制到共有可建模行 ID，按相同顺序各自真实训练；在 A 未清洗共同队列上 fit 一次 StandardScaler，B 只 transform。共有队列筛选属于实验范围，不属于额外清洗。各组全量数据质量、完整案例可用率和共同队列保留率分别保存。
 
-共同队列的 k 搜索结果，以及 M3 在两组相同的最多 2,000 行上重算的 Silhouette/CH/DBI/稳定性，都保存并标明口径；后者三种内部指标均为该共同抽样上的值，跨组 ARI 使用全部共同 ID。M1 旧 v2 全样本指标使用原 B scaler，仅作为单独的描述性实验展示，不能混入 M4 主对照。M3 的共同子集惯性也已最小修正为对子集计算的平方距离和，避免复用全训练集惯性。
+共同队列的 k 搜索结果，以及 M3 在两组相同的最多 2,000 行上重算的 Silhouette/CH/DBI/稳定性，都保存并标明口径；后者三种内部指标均为该共同抽样上的值，跨组 ARI 使用全部共同 ID。旧快照的全样本指标只作为单独的描述性展示，不能混入 M4 主对照。M3 的共同子集惯性也已最小修正为对子集计算的平方距离和，避免复用全训练集惯性。
 
 ### C 组正式导入
 

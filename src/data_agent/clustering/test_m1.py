@@ -18,7 +18,7 @@ ROOT = Path(__file__).resolve().parents[3]
 class M1Tests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.data = load_input("2", project_root=ROOT)
+        cls.data = load_input("5", project_root=ROOT)
 
     def small_data(self):
         frame = self.data.frame.iloc[:8].copy()

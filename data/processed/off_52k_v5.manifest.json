@@ -3,52 +3,39 @@
   "dataset_id": "off_52k_v5",
   "version": "5",
   "status": "processed",
-  "created_at": "2026-10-30T15:38:26.615021+00:00",
+  "created_at": "2026-11-01T14:37:17.049538+00:00",
   "parent": {
-    "dataset_id": "off_52k_v1",
-    "version": "1",
-    "sha256": "271b12a010af112fd4af6f5f432bf9a1f043432f409fcf108d15e3789b7402e4",
-    "uri": "data/base/off_52k_v1.parquet"
+    "dataset_id": "off_52k_v4",
+    "version": "4",
+    "sha256": "3c8680588bb9e55f5050c14bda1e8ffd2aa2c1ba2185e22b640ff17aecd155cd",
+    "uri": "D:/data_mining/data/processed/off_52k_v4.parquet"
   },
   "base_file": {
-    "path": "data/processed/off_52k_v5.parquet",
+    "path": "D:/data_mining/data/processed/off_52k_v5.parquet",
     "format": "parquet",
     "engine": "fastparquet",
     "compression": "snappy",
-    "sha256": "b1f1b79d5ffc923b43fd1337565c72fad32e129e67ca219826843327f2fd192e",
+    "sha256": "7b68f485d65e143716e5f0ecd588755ee47a07f9c88763e97f0e5fff75179a70",
     "row_count": 50000,
     "column_count": 20
   },
   "change_file": {
-    "path": "data/processed/change.off_52k_v5.changes.parquet",
-    "sha256": "72eb268bc8f80cfc29e4cab8ddf679316ebfc845f3616abf9ea20e30ab25a9cc"
+    "path": "D:/data_mining/data/processed/change.off_52k_v5_precision_finalization.changes.parquet",
+    "sha256": "664d39ce1cfdc50846153507add8787f498d1141dc8fbc2dcc1c1e6f8cf9ee8c"
   },
   "processing": {
     "cleaning_applied": true,
-    "description": "Agent-selected cleaning steps; see run trace and decisions.",
-    "change_id": "change.off_52k_v5"
+    "description": "Final precision pass for the single remaining food-relation conflict.",
+    "change_id": "change.off_52k_v5_precision_finalization"
   },
   "metadata": {
-    "agent_run": "C:\\Users\\33860\\Desktop\\数据挖掘实验\\data_mining\\outputs\\agent_runs\\probe_v4pro_01",
-    "step_count": 2,
-    "tools": [
-      "clean_duplicates",
-      "clean_missing"
-    ],
-    "safety_audit": {
-      "unique_row_ids": true,
-      "row_ids_subset_of_source": true,
-      "rows": 50000,
-      "source_rows": 52000,
-      "retained_rate": 0.9615384615384616,
-      "steps": 2,
-      "cells_changed": 8363,
-      "rows_removed": 2000
-    }
+    "plan_id": "off_52k_v5_precision_finalization",
+    "persist_mode": "final",
+    "decision_count": 1
   },
   "profile_file": {
-    "path": "C:/Users/33860/Desktop/数据挖掘实验/data_mining/config/profiles/off_52k_v5.json",
+    "path": "D:/data_mining/config/profiles/off_52k_v5.json",
     "dataset_id": "off_52k_v5",
-    "sha256": "24aa40517cbae2625902a2031a023e6492c7abb8d10d4334bdd41e78c68c8d09"
+    "sha256": "742956a846e3e90ce3d05614418a8bf17d1d720860cf9813b32e2b68a101b441"
   }
 }

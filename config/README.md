@@ -6,9 +6,11 @@ preprocessing code must not contain dataset column names.
 The human-readable definition of every quality rule is in
 `../docs/data_quality_definitions.md`.
 
-`profiles/off_52k_v1.json` defines the frozen input; `profiles/off_52k_v2.json`
+`profiles/off_52k_v1.json` defines the frozen input; `profiles/off_52k_v5.json`
 defines the current cleaned dataset and must be used for downstream clustering.
-`plans/off_52k_v2_conservative.json` is the formal plan that produced `v2`.
+`v2` remains the conservative baseline, while `v3`, `v4` and `v5` are the
+layered repair chain. Their plans live in `plans/`; the final machine-readable
+dataset is `data/processed/off_52k_v5.parquet`.
 
 `profiles/off_52k_v1.json` currently defines:
 
@@ -44,8 +46,8 @@ Process findings by following each finding's `selection_artifact_id`; the JSON
 samples are for inspection only and are intentionally truncated.
 
 Every persisted cleaning action writes the next dataset version under
-`data/processed/` and a loadable profile next to the source profile, for example
-`config/profiles/off_52k_v2.json`. The generated profile points to the processed
+`data/processed/` and a loadable profile next to the source profile. The current
+profile is `config/profiles/off_52k_v5.json`; it points to the processed v5
 manifest, so the normal loader and all seven detectors can run on the cleaned
 version without changing detector code.
 

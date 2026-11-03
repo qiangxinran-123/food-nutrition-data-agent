@@ -1,0 +1,212 @@
+{
+  "contract_version": "0.1",
+  "plan_id": "off_52k_v4_convergence",
+  "before_dataset": {
+    "contract_version": "0.1",
+    "dataset_id": "off_52k_v3",
+    "version": "3",
+    "uri": "D:/data_mining/data/processed/off_52k_v3.parquet",
+    "format": "parquet",
+    "sha256": "5bba8dab4acaf55072cb2454760a360ed4be164908644ff2c4a237aaf3e8f546",
+    "row_count": 50000,
+    "column_count": 20,
+    "source": null,
+    "parent_id": null,
+    "created_at": "2026-11-01T14:36:32.523683Z",
+    "metadata": {
+      "manifest_status": "processed",
+      "processing": {
+        "cleaning_applied": true,
+        "description": "Stratified repair: quarantine impossible hard-range values and impute them, winsorize IQR tails, recompute paired energy/salt fields, and cap bounded child fields instead of treating all anomalies the same way.",
+        "change_id": "change.off_52k_v3_stratified_repair"
+      },
+      "schema": {}
+    }
+  },
+  "decisions": [
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v4.iqr_winsorize.sugars_100g",
+      "issue_type": "outlier",
+      "strategy_id": "clip_value",
+      "finding_id": "outlier.iqr.sugars_100g",
+      "selection_artifact_id": "selection.off_52k_v3.outlier.iqr.sugars_100g",
+      "target_columns": [
+        "sugars_100g"
+      ],
+      "params": {
+        "minimum": -51.505500000000005,
+        "maximum": 64.0066
+      },
+      "reason": "Apply a second winsorization pass using the boxplot bounds recomputed after the first repair.",
+      "expected_effect": "Cap the remaining statistical tail to the newly computed lower/upper boundary without deleting rows.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v3",
+        "repair_policy": "iqr_second_pass"
+      },
+      "created_at": "2026-11-01T14:36:32.521681Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v4.iqr_winsorize.saturated-fat_100g",
+      "issue_type": "outlier",
+      "strategy_id": "clip_value",
+      "finding_id": "outlier.iqr.saturated-fat_100g",
+      "selection_artifact_id": "selection.off_52k_v3.outlier.iqr.saturated-fat_100g",
+      "target_columns": [
+        "saturated-fat_100g"
+      ],
+      "params": {
+        "minimum": -23.92217267071765,
+        "maximum": 29.234607204861177
+      },
+      "reason": "Apply a second winsorization pass using the boxplot bounds recomputed after the first repair.",
+      "expected_effect": "Cap the remaining statistical tail to the newly computed lower/upper boundary without deleting rows.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v3",
+        "repair_policy": "iqr_second_pass"
+      },
+      "created_at": "2026-11-01T14:36:32.521681Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v4.iqr_winsorize.fat_100g",
+      "issue_type": "outlier",
+      "strategy_id": "clip_value",
+      "finding_id": "outlier.iqr.fat_100g",
+      "selection_artifact_id": "selection.off_52k_v3.outlier.iqr.fat_100g",
+      "target_columns": [
+        "fat_100g"
+      ],
+      "params": {
+        "minimum": -77.72499999999998,
+        "maximum": 96.34999999999998
+      },
+      "reason": "Apply a second winsorization pass using the boxplot bounds recomputed after the first repair.",
+      "expected_effect": "Cap the remaining statistical tail to the newly computed lower/upper boundary without deleting rows.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v3",
+        "repair_policy": "iqr_second_pass"
+      },
+      "created_at": "2026-11-01T14:36:32.521681Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v4.salt_pair.cap_sodium",
+      "issue_type": "constraint",
+      "strategy_id": "recompute_derived",
+      "finding_id": "outlier.iqr.salt_100g",
+      "selection_artifact_id": "selection.off_52k_v3.outlier.iqr.salt_100g",
+      "target_columns": [
+        "sodium_100g"
+      ],
+      "params": {
+        "target_column": "sodium_100g",
+        "expression": "min(col(\"sodium_100g\"), 2.265)",
+        "round_digits": 6
+      },
+      "reason": "Cap sodium to the value implied by the salt winsorization bound so the pair can stay consistent.",
+      "expected_effect": "Remove the salt tail without breaking salt/sodium consistency.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v3",
+        "repair_policy": "paired_relation_winsorization"
+      },
+      "created_at": "2026-11-01T14:36:32.521681Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v4.salt_pair.derive_salt",
+      "issue_type": "constraint",
+      "strategy_id": "recompute_derived",
+      "finding_id": "outlier.iqr.salt_100g",
+      "selection_artifact_id": "selection.off_52k_v3.outlier.iqr.salt_100g",
+      "target_columns": [
+        "salt_100g"
+      ],
+      "params": {
+        "target_column": "salt_100g",
+        "expression": "col(\"sodium_100g\") * 2.5",
+        "round_digits": 6
+      },
+      "reason": "Recompute salt from the capped sodium value so both the tail cap and the declared conversion hold.",
+      "expected_effect": "Set salt at or below the boxplot boundary while preserving the salt/sodium relation.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v3",
+        "repair_policy": "paired_relation_winsorization"
+      },
+      "created_at": "2026-11-01T14:36:32.521681Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v4.conflict_repair.saturated-fat_100g",
+      "issue_type": "constraint",
+      "strategy_id": "recompute_derived",
+      "finding_id": "conflict.saturated_fat_not_above_total_fat",
+      "selection_artifact_id": "selection.off_52k_v3.conflict.saturated_fat_not_above_total_fat",
+      "target_columns": [
+        "saturated-fat_100g"
+      ],
+      "params": {
+        "target_column": "saturated-fat_100g",
+        "expression": "min(col(\"saturated-fat_100g\"), col(\"fat_100g\") * 1.05 + 0.5)",
+        "round_digits": 6
+      },
+      "reason": "Cap saturated fat after winsorization so it remains within the total-fat tolerance.",
+      "expected_effect": "Remove the remaining bounded-field conflict without dropping rows.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v3",
+        "repair_policy": "conflict_second_pass"
+      },
+      "created_at": "2026-11-01T14:36:32.521681Z"
+    },
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v4.conflict_repair.sugars_100g",
+      "issue_type": "constraint",
+      "strategy_id": "recompute_derived",
+      "finding_id": "conflict.sugars_not_above_carbohydrates",
+      "selection_artifact_id": "selection.off_52k_v3.conflict.sugars_not_above_carbohydrates",
+      "target_columns": [
+        "sugars_100g"
+      ],
+      "params": {
+        "target_column": "sugars_100g",
+        "expression": "min(col(\"sugars_100g\"), col(\"carbohydrates_100g\") * 1.05 + 0.5)",
+        "round_digits": 6
+      },
+      "reason": "Cap sugars after winsorization so it remains within the carbohydrate tolerance.",
+      "expected_effect": "Remove the remaining bounded-field conflict without dropping rows.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v3",
+        "repair_policy": "conflict_second_pass"
+      },
+      "created_at": "2026-11-01T14:36:32.521681Z"
+    }
+  ],
+  "dry_run": true,
+  "output_dataset_id": "off_52k_v4",
+  "description": "Convergence repair after the stratified v3 pass: second IQR winsorization, relation-aware salt/sodium cap, and final child-field conflict caps.",
+  "metadata": {
+    "source_dataset": "off_52k_v3",
+    "repair_scope": [
+      "iqr_second_pass",
+      "paired_relation",
+      "conflict_finalization"
+    ]
+  },
+  "created_at": "2026-11-01T14:36:32.521681Z"
+}

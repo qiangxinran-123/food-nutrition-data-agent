@@ -60,25 +60,66 @@ def identity(ref):
 
 
 def verify_fixed_strategy(root, before, after):
-    plan_path = root / "config/plans/off_52k_v2_conservative.json"
-    log_path = root / "logs/cleaning/off_52k_v2_conservative.plan_result.json"
-    plan, log = read_json(plan_path), read_json(log_path)
-    if identity(after.manifest.get("parent", {})) != identity(before.ref):
-        raise ValueError("B parent does not match A original input")
-    if identity(plan["before_dataset"]) != identity(before.ref) or identity(log["before_dataset"]) != identity(before.ref) or identity(log["after_dataset"]) != identity(after.ref):
-        raise ValueError("B plan/log input or output identity mismatch")
-    if log["status"] != "success" or log["dry_run"] or log["plan_id"] != plan["plan_id"] or plan["output_dataset_id"] != after.ref.dataset_id:
-        raise ValueError("B final run is not successful/persisted or plan does not match")
-    decisions = plan["decisions"]
-    if len(log["results"]) != len(decisions) or any(r["decision"] != d or r["status"] not in ("success", "skipped") for r, d in zip(log["results"], decisions)):
-        raise ValueError("B executed decisions do not match plan")
-    change = root / after.manifest["change_file"]["path"]
-    if sha256_file(change) != after.manifest["change_file"]["sha256"]:
-        raise ValueError("B change table hash mismatch")
-    return {"status": "verified", "plan_id": plan["plan_id"], "decision_count": len(decisions),
-            "sources": [source(p) for p in (plan_path, log_path, change, after.manifest_path, after.profile_path)],
-            "historical_cleaning_duration_ms": log.get("duration_ms"),
-            "note": "Final persisted run is successful; per-step dry_run flags belong to final-persist mode. Historical plan identity is checked by exact recorded decisions."}
+    """Verify the complete persisted v2 -> v3 -> v4 -> v5 cleaning chain."""
+    chain = (
+        ("2", "off_52k_v2_conservative"),
+        ("3", "off_52k_v3_stratified_repair"),
+        ("4", "off_52k_v4_convergence"),
+        ("5", "off_52k_v5_precision_finalization"),
+    )
+    previous = identity(before.ref)
+    entries, sources = [], []
+    for version, plan_id in chain:
+        plan_path = root / "config/plans" / f"{plan_id}.json"
+        log_path = root / "logs/cleaning" / f"{plan_id}.plan_result.json"
+        manifest_path = root / "data/processed" / f"off_52k_v{version}.manifest.json"
+        profile_path = root / "config/profiles" / f"off_52k_v{version}.json"
+        plan, log, manifest = read_json(plan_path), read_json(log_path), read_json(manifest_path)
+        if identity(plan.get("before_dataset", {})) != previous or identity(log.get("before_dataset", {})) != previous:
+            raise ValueError(f"v{version} plan/log input does not match the previous dataset")
+        if plan.get("plan_id") != plan_id or log.get("plan_id") != plan_id or plan.get("output_dataset_id") != f"off_52k_v{version}":
+            raise ValueError(f"v{version} plan/log identity mismatch")
+        if log.get("status") != "success" or log.get("dry_run"):
+            raise ValueError(f"v{version} run is not successful/persisted")
+        decisions = plan["decisions"]
+        if len(log.get("results", [])) != len(decisions) or any(
+            result["decision"] != decision or result["status"] not in ("success", "skipped")
+            for result, decision in zip(log["results"], decisions)
+        ):
+            raise ValueError(f"v{version} executed decisions do not match plan")
+        current = identity(log.get("after_dataset", {}))
+        if current != identity({"dataset_id": manifest.get("dataset_id"), "version": manifest.get("version"),
+                                "sha256": manifest.get("base_file", {}).get("sha256")}):
+            raise ValueError(f"v{version} manifest identity does not match the run output")
+        base_path = Path(manifest["base_file"]["path"])
+        if not base_path.is_absolute():
+            base_path = root / base_path
+        if sha256_file(base_path) != manifest["base_file"]["sha256"]:
+            raise ValueError(f"v{version} dataset hash mismatch")
+        change_path = Path(manifest["change_file"]["path"])
+        if not change_path.is_absolute():
+            change_path = root / change_path
+        if sha256_file(change_path) != manifest["change_file"]["sha256"]:
+            raise ValueError(f"v{version} change table hash mismatch")
+        profile_file = manifest.get("profile_file", {})
+        if profile_file.get("sha256") and sha256_file(profile_path) != profile_file["sha256"]:
+            raise ValueError(f"v{version} profile hash mismatch")
+        sources.extend(source(path) for path in (plan_path, log_path, change_path, manifest_path, profile_path))
+        entries.append({"version": version, "plan_id": plan_id, "decision_count": len(decisions),
+                        "before": previous, "after": current})
+        previous = current
+    if previous != identity(after.ref):
+        raise ValueError("B final version does not match the verified cleaning chain")
+    if identity(after.manifest.get("parent", {})) != entries[-2]["after"]:
+        raise ValueError("B final manifest parent does not match the preceding version")
+    return {"status": "verified", "plan_id": entries[-1]["plan_id"], "versions": [x["version"] for x in entries],
+            "decision_count": sum(x["decision_count"] for x in entries),
+            "final_decision_count": entries[-1]["decision_count"],
+            "chain": [{"version": x["version"], "plan_id": x["plan_id"], "decision_count": x["decision_count"],
+                       "dataset_id": x["after"][0], "sha256": x["after"][2]} for x in entries],
+            "sources": sources,
+            "historical_cleaning_duration_ms": sum(read_json(root / "logs/cleaning" / f"{x['plan_id']}.plan_result.json").get("duration_ms") or 0 for x in entries),
+            "note": "All four persisted plans, outputs, change logs and profiles are hash-checked; v5 is the final machine-readable dataset."}
 
 
 def import_agent_result(bundle_path, before, project_root):
@@ -185,7 +226,7 @@ def compare_strategies(project_root, output_dir, *, protocol=None, m3_run, agent
     bundles = [p for p in candidates if Path(p).name == 'agent_bundle.json']
     if agent_bundle is None and len(bundles) == 1:
         agent_bundle = bundles[0]
-    before, after = load_input("1", project_root=root), load_input("2", project_root=root)
+    before, after = load_input("1", project_root=root), load_input("5", project_root=root)
     b_evidence = verify_fixed_strategy(root, before, after)
     data = {"A": before, "B": after}
     c = {"status": "not_available", "reason": "No real Agent provider export, decisions, tool executions and external provenance review supplied."}
@@ -194,8 +235,9 @@ def compare_strategies(project_root, output_dir, *, protocol=None, m3_run, agent
             data["C"], c = import_agent_result(agent_bundle, before, root)
         except (ValueError, KeyError, OSError) as exc:
             c = {"status": "not_available", "reason": f"Agent evidence rejected: {exc}"}
-    summaries = [root / "logs/checks/off_52k_v1_quality_summary.json", root / "logs/checks_v2/off_52k_v2_quality_summary.json"]
-    quality = compare_quality(before, after, *(read_json(p) for p in summaries), change_path=root / after.manifest["change_file"]["path"])
+    summaries = [root / "logs/checks/off_52k_v1_quality_summary.json", root / "logs/checks_v5/off_52k_v5_quality_summary.json"]
+    quality = compare_quality(before, after, *(read_json(p) for p in summaries))
+    quality["cleaning_chain"] = b_evidence
     m3 = Path(m3_run).resolve()
     m3_manifest = read_json(m3 / "manifest.json")
     for name, digest in m3_manifest["artifacts"].items():

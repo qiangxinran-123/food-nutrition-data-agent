@@ -1,3 +1,5 @@
+"""Build runtime field rules from dataset configuration."""
+
 from __future__ import annotations
 
 from typing import Any
@@ -7,21 +9,6 @@ import pandas.api.types as ptypes
 
 from .config import ColumnConfig, DatasetConfig
 from .contracts import ColumnSpec, DatasetRef, LogicalType, SchemaProfile
-
-
-def _json_scalar(value: Any) -> Any:
-    if value is None:
-        return None
-    try:
-        if bool(pd.isna(value)):
-            return None
-    except (TypeError, ValueError):
-        pass
-    if hasattr(value, "item"):
-        value = value.item()
-    if isinstance(value, (str, int, float, bool)):
-        return value
-    return str(value)
 
 
 def _physical_dtype(series: pd.Series) -> str:
@@ -36,6 +23,7 @@ def _physical_dtype(series: pd.Series) -> str:
 
 
 def _infer_logical_type(series: pd.Series, name: str) -> LogicalType:
+    """Infer a logical type without scanning the column values."""
     if ptypes.is_bool_dtype(series):
         return LogicalType.BOOLEAN
     if ptypes.is_datetime64_any_dtype(series):
@@ -43,18 +31,13 @@ def _infer_logical_type(series: pd.Series, name: str) -> LogicalType:
     if ptypes.is_numeric_dtype(series):
         return LogicalType.NUMERIC
 
-    non_null_count = int(series.notna().sum())
-    unique_count = int(series.nunique(dropna=True))
-    unique_ratio = unique_count / non_null_count if non_null_count else 0.0
     normalised_name = name.strip().lower()
     identifier_like = (
         normalised_name in {"id", "code", "key", "uuid"}
         or normalised_name.endswith("_id")
     )
-    if identifier_like and unique_ratio >= 0.95:
+    if identifier_like:
         return LogicalType.IDENTIFIER
-    if unique_count <= 50 or unique_ratio <= 0.2:
-        return LogicalType.CATEGORICAL
     return LogicalType.TEXT
 
 
@@ -76,29 +59,19 @@ def _merge_missing_tokens(
     return tokens
 
 
-def _column_metadata(series: pd.Series, null_count: int, unique_count: int) -> dict[str, Any]:
-    row_count = int(len(series))
-    metadata: dict[str, Any] = {
-        "null_count": null_count,
-        "null_rate": round(null_count / row_count, 6) if row_count else 0.0,
-        "non_null_count": row_count - null_count,
-        "unique_count": unique_count,
-    }
-
-    non_null = series.dropna()
-    if non_null.empty:
-        return metadata
-
-    if ptypes.is_numeric_dtype(series) and not ptypes.is_bool_dtype(series):
-        metadata.update(
-            {
-                "min": _json_scalar(non_null.min()),
-                "median": _json_scalar(non_null.median()),
-                "max": _json_scalar(non_null.max()),
-            }
-        )
-    else:
-        metadata["examples"] = [_json_scalar(value) for value in non_null.head(3)]
+def _rule_metadata(column_config: ColumnConfig) -> dict[str, Any]:
+    metadata: dict[str, Any] = {}
+    if column_config.format_regex is not None:
+        metadata["format_regex"] = column_config.format_regex
+    if column_config.datetime_format is not None:
+        metadata["datetime_format"] = column_config.datetime_format
+    if column_config.dayfirst is not None:
+        metadata["dayfirst"] = column_config.dayfirst
+    if column_config.yearfirst is not None:
+        metadata["yearfirst"] = column_config.yearfirst
+    if column_config.boolean_values is not None:
+        metadata["boolean_values"] = column_config.boolean_values
+    metadata.update(column_config.metadata)
     return metadata
 
 
@@ -136,8 +109,6 @@ def build_schema_profile(
             continue
         series = frame[name]
         column_config = configured_columns.get(name)
-        null_count = int(series.isna().sum())
-        unique_count = int(series.nunique(dropna=True))
 
         logical_type = (
             column_config.logical_type
@@ -147,12 +118,12 @@ def build_schema_profile(
         nullable = (
             column_config.nullable
             if column_config is not None and column_config.nullable is not None
-            else null_count > 0
+            else True
         )
         unique = (
             column_config.unique
             if column_config is not None and column_config.unique is not None
-            else null_count == 0 and unique_count == len(series)
+            else False
         )
 
         columns.append(
@@ -182,39 +153,7 @@ def build_schema_profile(
                 description=(
                     column_config.description if column_config is not None else None
                 ),
-                metadata=(
-                    {
-                        **_column_metadata(series, null_count, unique_count),
-                        **(
-                            {"format_regex": column_config.format_regex}
-                            if column_config.format_regex is not None
-                            else {}
-                        ),
-                        **(
-                            {"datetime_format": column_config.datetime_format}
-                            if column_config.datetime_format is not None
-                            else {}
-                        ),
-                        **(
-                            {"dayfirst": column_config.dayfirst}
-                            if column_config.dayfirst is not None
-                            else {}
-                        ),
-                        **(
-                            {"yearfirst": column_config.yearfirst}
-                            if column_config.yearfirst is not None
-                            else {}
-                        ),
-                        **(
-                            {"boolean_values": column_config.boolean_values}
-                            if column_config.boolean_values is not None
-                            else {}
-                        ),
-                        **column_config.metadata,
-                    }
-                    if column_config is not None
-                    else _column_metadata(series, null_count, unique_count)
-                ),
+                metadata=_rule_metadata(column_config) if column_config is not None else {},
             )
         )
 

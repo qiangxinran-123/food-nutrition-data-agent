@@ -3,71 +3,39 @@
   "dataset_id": "off_52k_v3",
   "version": "3",
   "status": "processed",
-  "created_at": "2026-10-30T15:32:16.297283+00:00",
+  "created_at": "2026-11-01T14:34:50.814622+00:00",
   "parent": {
-    "dataset_id": "off_52k_v1",
-    "version": "1",
-    "sha256": "271b12a010af112fd4af6f5f432bf9a1f043432f409fcf108d15e3789b7402e4",
-    "uri": "data/base/off_52k_v1.parquet"
+    "dataset_id": "off_52k_v2",
+    "version": "2",
+    "sha256": "b1f89f0d71229b86a9dad8892c09285721e8f0f1f70020c6a06698ade56dd85a",
+    "uri": "data/processed/off_52k_v2.parquet"
   },
   "base_file": {
-    "path": "data/processed/off_52k_v3.parquet",
+    "path": "D:/data_mining/data/processed/off_52k_v3.parquet",
     "format": "parquet",
     "engine": "fastparquet",
     "compression": "snappy",
-    "sha256": "7889037a4d4c2cb645ac560bc9675355bb043d74841096ba1c942415a8ef2f9f",
+    "sha256": "5bba8dab4acaf55072cb2454760a360ed4be164908644ff2c4a237aaf3e8f546",
     "row_count": 50000,
     "column_count": 20
   },
   "change_file": {
-    "path": "data/processed/change.off_52k_v3.changes.parquet",
-    "sha256": "6c84b04c1baad9319bf1f3f6a3bd332a71e4530e290e104151026e0c076e6fd0"
+    "path": "D:/data_mining/data/processed/change.off_52k_v3_stratified_repair.changes.parquet",
+    "sha256": "745bf5907c0b52d7bac2c1774c67c899f0dae4b57efb5043c1a733e10cbfb6d0"
   },
   "processing": {
     "cleaning_applied": true,
-    "description": "Agent-selected cleaning steps; see run trace and decisions.",
-    "change_id": "change.off_52k_v3"
+    "description": "Stratified repair: quarantine impossible hard-range values and impute them, winsorize IQR tails, recompute paired energy/salt fields, and cap bounded child fields instead of treating all anomalies the same way.",
+    "change_id": "change.off_52k_v3_stratified_repair"
   },
   "metadata": {
-    "agent_run": "C:\\Users\\33860\\Desktop\\数据挖掘实验\\data_mining\\outputs\\agent_runs\\agent_20261030_demo03",
-    "step_count": 21,
-    "tools": [
-      "clean_duplicates",
-      "clean_outliers",
-      "clean_outliers",
-      "clean_outliers",
-      "clean_outliers",
-      "clean_outliers",
-      "clean_outliers",
-      "clean_outliers",
-      "clean_outliers",
-      "clean_outliers",
-      "clean_outliers",
-      "resolve_conflicts",
-      "resolve_conflicts",
-      "clean_missing",
-      "clean_missing",
-      "clean_missing",
-      "clean_missing",
-      "clean_missing",
-      "clean_missing",
-      "clean_missing",
-      "clean_missing"
-    ],
-    "safety_audit": {
-      "unique_row_ids": true,
-      "row_ids_subset_of_source": true,
-      "rows": 50000,
-      "source_rows": 52000,
-      "retained_rate": 0.9615384615384616,
-      "steps": 21,
-      "cells_changed": 96840,
-      "rows_removed": 2000
-    }
+    "plan_id": "off_52k_v3_stratified_repair",
+    "persist_mode": "final",
+    "decision_count": 37
   },
   "profile_file": {
-    "path": "C:/Users/33860/Desktop/数据挖掘实验/data_mining/config/profiles/off_52k_v3.json",
+    "path": "D:/data_mining/config/profiles/off_52k_v3.json",
     "dataset_id": "off_52k_v3",
-    "sha256": "f68cf027a9d0465363d67226a0e87bb7478bd823ff3979c19b51611e5f331939"
+    "sha256": "7efa8aaf663df659b9506f5d3ab942c0af0364b5b713d8e6827af799a1463471"
   }
 }

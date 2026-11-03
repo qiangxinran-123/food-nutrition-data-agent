@@ -19,7 +19,8 @@ ROOT = Path(__file__).resolve().parents[3]
 class M2Tests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.real = load_input("2", project_root=ROOT)
+        cls.real = load_input("5", project_root=ROOT)
+        cls.historical = load_input("2", project_root=ROOT)
 
     def fixture(self):
         frame = self.real.frame.iloc[:7].copy()
@@ -109,7 +110,7 @@ class M2Tests(unittest.TestCase):
         path = ROOT / "outputs/clustering/m1_20261029_run03"
         names = ["metrics.json", "labels_k5.csv", "scaler.json"]
         before = {name: sha256_file(path / name) for name in names}
-        selected, scaled, result, metrics = load_m1_result(self.real, path, 5)
+        selected, scaled, result, metrics = load_m1_result(self.historical, path, 5)
         self.assertEqual(len(selected.row_ids), 50000)
         self.assertEqual(len(result.labels), 50000)
         self.assertEqual(metrics["matrix_sha256"], scaled.matrix_sha256)

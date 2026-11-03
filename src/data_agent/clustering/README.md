@@ -2,15 +2,15 @@
 
 ## 边界和输入
 
-模块三使用 `data_agent.clustering.load_input(version, project_root=...)`；模块四可从 `data_agent.experiments` 导入同一入口。version 为字符串 `"1"` 或 `"2"`，根目录必须显式给出。读取固定的 `config/profiles/off_52k_v{version}.json` 和其中 manifest，manifest 指向 Parquet；不接受任意版本，也不回退。入口复用 `load_dataset(config_path, *, project_root=None, verify_hash=True)`，后者返回 `LoadedDataset(ref, schema, frame, manifest, manifest_path, data_path, config, config_path)`；失败可抛 `DatasetLoadError`（包括 `DatasetIntegrityError`、`DatasetShapeError`）、配置/解析/读取异常。适配器还拒绝版本或 ID 不匹配、行 ID 缺失或重复。
+模块三使用 `data_agent.clustering.load_input(version, project_root=...)`；模块四可从 `data_agent.experiments` 导入同一入口。下游默认使用版本字符串 `"5"`，即 `config/profiles/off_52k_v5.json`；`"1"` 到 `"4"` 只用于原始数据审计和版本链复核。根目录必须显式给出，入口不接受任意版本，也不回退。读取固定的 `config/profiles/off_52k_v{version}.json` 和其中 manifest，manifest 指向 Parquet；入口复用 `load_dataset(config_path, *, project_root=None, verify_hash=True)`，后者返回 `LoadedDataset(ref, schema, frame, manifest, manifest_path, data_path, config, config_path)`；失败可抛 `DatasetLoadError`（包括 `DatasetIntegrityError`、`DatasetShapeError`）、配置/解析/读取异常。适配器还拒绝版本或 ID 不匹配、行 ID 缺失或重复。
 
-加载器对文件字节按 manifest 的 base_file.sha256 进行 SHA256 校验，并检查源文件行列数；不校验 profile 或 manifest 自身哈希。返回 `DatasetInput` 包含独立 DataFrame、原有 `DatasetRef` 和 `SchemaProfile`、完整 manifest、实际 profile/manifest/data 路径、行 ID 字段与列顺序。`ref.sha256` 是输入文件哈希；`ref.source` 是 manifest 的 source.path（v2 无 source，父来源在 `manifest['parent']`）。上游接口并不将 manifest.profile_file.sha256 用作完整性验证。数据加载和字段识别不执行质量检测、清洗、标准化或聚类。
+加载器对文件字节按 manifest 的 base_file.sha256 进行 SHA256 校验，并检查源文件行列数；不校验 profile 或 manifest 自身哈希。返回 `DatasetInput` 包含独立 DataFrame、原有 `DatasetRef` 和 `SchemaProfile`、完整 manifest、实际 profile/manifest/data 路径、行 ID 字段与列顺序。`ref.sha256` 是输入文件哈希；`ref.source` 是 manifest 的 source.path（v5 无 source，父来源在 `manifest['parent']`）。上游接口并不将 manifest.profile_file.sha256 用作完整性验证。数据加载和字段识别不执行质量检测、清洗、标准化或聚类。
 
-已知 v2 profile 固定指向 `D:/data_mining/data/processed/off_52k_v2.manifest.json`。适配器只对这个精确路径使用显式根目录下的 `data/processed/off_52k_v2.manifest.json`，通过临时 profile 调用原加载器，原文件不改动，仍校验数据哈希和 ID/version。其他路径照原加载器处理，不搜索、替换其他字符串或关闭校验。临时目录必须可写；临时 profile 仅生命周期内存在。原始 loader 直接加载 v2 在该 D 盘文件不存在时会报 manifest not found，可通过 `load_dataset('config/profiles/off_52k_v2.json', project_root=项目根目录)` 复现。
+已知 `v2` 到 `v5` profile 固定指向 `D:/data_mining/data/processed/off_52k_v*.manifest.json`。适配器只对这些精确路径使用显式根目录下的同名 manifest，通过临时 profile 调用原加载器，原文件不改动，仍校验数据哈希和 ID/version。其他路径照原加载器处理，不搜索、替换其他字符串或关闭校验。临时目录必须可写；临时 profile 仅生命周期内存在。
 
-v1 冻结快照含 52,000 行，其中 2,000 为注入重复行；v2 为清洗后 50,000 行，均 20 列。`__row_id` 在冻结快照建立时生成并存入文件；v2 保留幸存行的 ID，适配器要求非空且唯一。`__source_row` 是源表行号，v1 重复行共享它，不能作为唯一 ID；`code` 在 v1 也不唯一。跨版本对齐请用 `__row_id`，并注意 v2 删除了部分行。
+v1 冻结快照含 52,000 行，其中 2,000 为注入重复行；v5 为最终清洗后 50,000 行，均 20 列。`__row_id` 在冻结快照建立时生成并存入文件；v5 保留幸存行的 ID，适配器要求非空且唯一。`__source_row` 是源表行号，v1 重复行共享它，不能作为唯一 ID；`code` 在 v1 也不唯一。跨版本对齐请用 `__row_id`，并注意 v2 已删除重复行。
 
-营养字段均为数值 float64：`energy-kcal_100g` 单位 kcal/100g，`energy_100g` 为 kJ/100g，`proteins_100g`、`fat_100g`、`saturated-fat_100g`、`carbohydrates_100g`、`sugars_100g`、`fiber_100g`、`salt_100g`、`sodium_100g` 为 g/100g。`serving_quantity` 单位由来源定义，不应直接视作每百克营养值。数值缺失以 null/NaN 表达，不等于零；profile 中 categories 的 `unknown`、categories_en 的 `en:null`、nutriscore_grade 的 `unknown` 属于对应列的质量检测缺失语义，并非加载时统一替换。数据可能有异常值；v2 也不保证所有字段非空。
+营养字段均为数值 float64：`energy-kcal_100g` 单位 kcal/100g，`energy_100g` 为 kJ/100g，`proteins_100g`、`fat_100g`、`saturated-fat_100g`、`carbohydrates_100g`、`sugars_100g`、`fiber_100g`、`salt_100g`、`sodium_100g` 为 g/100g。`serving_quantity` 单位由来源定义，不应直接视作每百克营养值。数值缺失以 null/NaN 表达，不等于零；profile 中 categories 的 `unknown`、categories_en 的 `en:null`、nutriscore_grade 的 `unknown` 属于对应列的质量检测缺失语义，并非加载时统一替换。v5 已消除硬范围、IQR 尾部和字段冲突，但文本缺失仍保留。
 
 ## 配置与输出
 
@@ -39,7 +39,7 @@ M1 调用示例：
 from pathlib import Path
 from data_agent.clustering import load_input
 
-data = load_input("2", project_root=Path.cwd())
+data = load_input("5", project_root=Path.cwd())
 features = ["proteins_100g", "fat_100g", "carbohydrates_100g"]
 frame = data.frame[[data.row_id_column, *features]].copy()
 print(data.ref.dataset_id, data.ref.version, data.ref.sha256, data.columns)
@@ -91,10 +91,10 @@ New-Item -ItemType Directory -Force src/data_agent/clustering/.tmp | Out-Null
 $env:TEMP = (Resolve-Path src/data_agent/clustering/.tmp).Path
 $env:TMP = $env:TEMP
 $env:MPLCONFIGDIR = $env:TEMP
-& $python -m data_agent.clustering --project-root . --m1-run outputs/clustering/m1_20261029_run03 --analysis-k 5 --output outputs/clustering/my_new_m2_run
+& $python -m data_agent.clustering --project-root . --m1-run outputs/clustering/my_new_run --analysis-k 5 --output outputs/clustering/my_new_m2_run
 ```
 
-`--m1-run` 复用已有 M1 目录；必须显式传入 `--analysis-k`，这里 k=5 只是示例，不是自动选择的业务 k。它核对 scaler 与标签文件的 M1 哈希、数据版本、行 ID、重建矩阵与 scaler 的哈希、簇数量，使用 M1 主种子的标签和中心。若省略 `--m1-run` 而指定 `--analysis-k`，原 M1 运行会照常执行，并在同一个新目录接着生成 M2 产物；既有参数含义不变。两个路径都不覆盖已有目录。中断后应使用新目录重试。
+`--m1-run` 复用已有 M1 目录；必须显式传入 `--analysis-k`，这里 k=5 只是示例，不是自动选择的业务 k。它核对 scaler 与标签文件的 M1 哈希、数据版本、行 ID、重建矩阵与 scaler 的哈希、簇数量，使用 M1 主种子的标签和中心。`m1_20261029_run03` 是旧 v2 快照的历史产物，不能与当前 v5 混用；切换版本后必须重新运行 M1。若省略 `--m1-run` 而指定 `--analysis-k`，原 M1 运行会照常执行，并在同一个新目录接着生成 M2 产物；既有参数含义不变。两个路径都不覆盖已有目录。中断后应使用新目录重试。
 
 接口 `load_m1_result(data, run_dir, k)` 返回 `(selected, scaled, result, metrics)`；`analyze_clusters(data, scaled, result)` 按 ID 关联原数据并输出各簇原始单位均值、中位数、与总体均值之差及按标准化空间中心距离排序的代表食品。每行类别只计一次：优先 `categories_en`，再取 `categories`，取逗号分隔的第一个非空且非 unknown/en:null/null 项，否则记为 `(missing)`；统计包含全部类别与缺失，分母为簇大小。商品名缺失记 null，不生成解释性标签。
 

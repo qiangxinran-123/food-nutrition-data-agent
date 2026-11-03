@@ -29,7 +29,7 @@ def main():
     if len(args.seeds) < 2 or len(set(args.seeds)) != len(args.seeds):
         parser.error("provide at least two distinct seeds")
     root = args.project_root.resolve()
-    data = load_input("2", project_root=root)
+    data = load_input("5", project_root=root)
     if args.m1_run:
         from .analysis import load_m1_result
         _, scaled, result, metrics = load_m1_result(data, args.m1_run, args.analysis_k)

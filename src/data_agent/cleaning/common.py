@@ -353,7 +353,7 @@ class CleaningRun:
         except (TypeError, ValueError):
             # A pandas string extension column cannot accept a numeric replacement
             # in place. Convert that column to object before applying the explicit
-            # strategy result; a later profiling pass can infer the new dtype.
+            # strategy result; a later schema rebuild can infer the new dtype.
             self.frame[column] = self.frame[column].astype("object")
             self.frame.at[label, column] = value
         return True

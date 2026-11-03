@@ -55,14 +55,6 @@ def _stringify_identifier(series: pd.Series) -> pd.Series:
     return series.map(_identifier_text).astype("string")
 
 
-def _metadata_from_series(series: pd.Series) -> dict[str, Any]:
-    return {
-        "physical_dtype": str(series.dtype),
-        "null_count": int(series.isna().sum()),
-        "unique_count": int(series.nunique(dropna=True)),
-    }
-
-
 def apply_ingestion_policy(
     frame: pd.DataFrame,
     policy: IngestionPolicy,

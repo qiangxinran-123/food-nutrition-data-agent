@@ -23,7 +23,7 @@ tests/                   测试
 docs/                    质量规则和清洗策略说明
 ```
 
-v1 包含 52,000 行（50,000 行样本和 2,000 行注入重复），v2 为清洗后的 50,000 行。数据来源与哈希见 `data/base/off_52k_v1.manifest.json`；样本来源为 [Open Food Facts](https://world.openfoodfacts.org/data)。原始 manifest 中未记录数据许可，使用或再分发前请核实来源许可及署名要求。
+v1 包含 52,000 行（50,000 行样本和 2,000 行注入重复）；v2 是保守清洗基线，v3–v5 依次进行分层修复、收敛处理和精度修正。当前下游聚类数据为 v5，共 50,000 行、20 列。详细处理过程见 [清洗修改说明](README_清洗修改说明.md)。数据来源与哈希见 `data/base/off_52k_v1.manifest.json`；样本来源为 [Open Food Facts](https://world.openfoodfacts.org/data)。原始 manifest 中未记录数据许可，使用或再分发前请核实来源许可及署名要求。
 
 ## 安装
 
@@ -73,7 +73,7 @@ python -m unittest data_agent.clustering.test_m0 data_agent.clustering.test_m1 d
 
 ## 已知限制
 
-- 部分 v2–v5 配置包含原环境绝对路径。聚类适配器对文档中指定的 v2 路径有特殊处理；直接使用通用加载器或其他版本前，请检查并按实际项目目录调整 profile。详见聚类模块说明。
+- v2–v5 的 profile 和 manifest 含原环境绝对路径。聚类适配器会处理指定的 `D:/data_mining/` 路径；直接使用通用加载器、清洗脚本或实验溯源功能前，需要检查路径及所需历史日志。详见聚类模块说明。
 - 质量与聚类结果用于探索分析，不能直接作为食品健康程度的判断。
 - 原项目未提供代码许可证；使用和再分发代码前请向权利人确认。
 

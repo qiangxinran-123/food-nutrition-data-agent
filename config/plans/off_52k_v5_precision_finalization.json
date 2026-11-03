@@ -1,0 +1,62 @@
+{
+  "contract_version": "0.1",
+  "plan_id": "off_52k_v5_precision_finalization",
+  "before_dataset": {
+    "contract_version": "0.1",
+    "dataset_id": "off_52k_v4",
+    "version": "4",
+    "uri": "D:/data_mining/data/processed/off_52k_v4.parquet",
+    "format": "parquet",
+    "sha256": "3c8680588bb9e55f5050c14bda1e8ffd2aa2c1ba2185e22b640ff17aecd155cd",
+    "row_count": 50000,
+    "column_count": 20,
+    "source": null,
+    "parent_id": null,
+    "created_at": "2026-11-01T14:37:15.388298Z",
+    "metadata": {
+      "manifest_status": "processed",
+      "processing": {
+        "cleaning_applied": true,
+        "description": "Convergence repair after the stratified v3 pass: second IQR winsorization, relation-aware salt/sodium cap, and final child-field conflict caps.",
+        "change_id": "change.off_52k_v4_convergence"
+      },
+      "schema": {}
+    }
+  },
+  "decisions": [
+    {
+      "contract_version": "0.1",
+      "decision_id": "off52k_v5.conflict_repair.sugars_100g_no_rounding",
+      "issue_type": "constraint",
+      "strategy_id": "recompute_derived",
+      "finding_id": "conflict.sugars_not_above_carbohydrates",
+      "selection_artifact_id": "selection.off_52k_v4.conflict.sugars_not_above_carbohydrates",
+      "target_columns": [
+        "sugars_100g"
+      ],
+      "params": {
+        "target_column": "sugars_100g",
+        "expression": "min(col(\"sugars_100g\"), col(\"carbohydrates_100g\") * 1.05 + 0.5)"
+      },
+      "reason": "Cap the final floating-point boundary case without decimal rounding.",
+      "expected_effect": "Set sugars exactly at or below the carbohydrate tolerance boundary.",
+      "risk_level": "caution",
+      "requires_confirmation": false,
+      "metadata": {
+        "source_dataset": "off_52k_v4",
+        "repair_policy": "conflict_precision_finalization"
+      },
+      "created_at": "2026-11-01T14:37:15.386663Z"
+    }
+  ],
+  "dry_run": true,
+  "output_dataset_id": "off_52k_v5",
+  "description": "Final precision pass for the single remaining food-relation conflict.",
+  "metadata": {
+    "source_dataset": "off_52k_v4",
+    "repair_scope": [
+      "conflict_precision"
+    ]
+  },
+  "created_at": "2026-11-01T14:37:15.386663Z"
+}

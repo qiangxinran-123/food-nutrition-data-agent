@@ -2,7 +2,7 @@
   "contract_version": "0.1",
   "dataset_id": "off_52k_v4",
   "domain_pack": "food_nutrition",
-  "manifest": "C:/Users/33860/Desktop/数据挖掘实验/data_mining/data/processed/off_52k_v4.manifest.json",
+  "manifest": "D:/data_mining/data/processed/off_52k_v4.manifest.json",
   "row_id_column": "__row_id",
   "source_row_column": "__source_row",
   "primary_key_candidates": [

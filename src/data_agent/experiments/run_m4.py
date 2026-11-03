@@ -11,9 +11,9 @@ def main():
     p.add_argument('--output', type=Path, required=True)
     p.add_argument('--protocol', type=Path)
     p.add_argument('--agent-bundle', type=Path)
-    p.add_argument('--m1-run', type=Path, default=Path('outputs/clustering/m1_20261029_run03'))
-    p.add_argument('--m2-run', type=Path, default=Path('outputs/clustering/m2_20261029_k5_run02'))
-    p.add_argument('--m3-run', type=Path, default=Path('outputs/experiments/m3_20261029_run03'))
+    p.add_argument('--m1-run', type=Path, required=True, help='M1 run generated from the current dataset version')
+    p.add_argument('--m2-run', type=Path, required=True, help='M2 run generated from the matching M1 run')
+    p.add_argument('--m3-run', type=Path, required=True, help='M3 run generated from the current dataset version')
     a = p.parse_args()
     root = a.project_root.resolve()
     def absolute(path):

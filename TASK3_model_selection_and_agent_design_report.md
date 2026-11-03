@@ -4,6 +4,12 @@
 > 本报告中的模型调用、Token、费用与工具执行均来自真实 DeepSeek API 运行，不使用模拟响应。
 > 项目根目录：`data_mining`；主运行：`outputs/agent_runs/agent_20261030_demo03`。
 
+> **2026-11-01 同步说明**：正式机器读取数据已更新为 `off_52k_v5`。本报告记录的
+> `agent_20261030_demo03` 及其 `off_52k_v3` 是历史 Agent 对照运行，不等同于当前
+> 正式 `v3` 分层修复版本，也不应作为最终聚类输入。当前正式输入、字段规则和复检
+> 分别见 `data/processed/off_52k_v5.parquet`、`config/profiles/off_52k_v5.json` 和
+> `logs/checks_v5/off_52k_v5_quality_summary.md`。
+
 ## 1. 阶段目标与交付物
 
 ### 1.1 五项核心任务对照
@@ -374,9 +380,9 @@ outputs/agent_runs/agent_20261030_demo03/
 └── agent_bundle/{agent_bundle.json,provider_export.json,decisions.json,tool_executions.json,output_profile.json,provenance_review.json}
 ```
 
-最终数据集：`data/processed/off_52k_v3.parquet`、`off_52k_v3.manifest.json`、`change.off_52k_v3.changes.parquet`、`config/profiles/off_52k_v3.json`。
+历史运行最终数据集：`data/processed/off_52k_v3.parquet`、`off_52k_v3.manifest.json`、`change.off_52k_v3.changes.parquet`、`config/profiles/off_52k_v3.json`。
 
-> 两次模型探针另产生 `off_52k_v4`（flash）与 `off_52k_v5`（v4-pro），仅用于对照基线，不参与 C 组，也不替代 v3。
+> 两次模型探针另产生旧命名的 `off_52k_v4`（flash）与 `off_52k_v5`（v4-pro），仅用于历史对照，不参与 C 组，也不替代当前正式 `v5`。
 
 ## 8. C 组证据包（衔接第四部分）
 
@@ -407,7 +413,7 @@ outputs/agent_runs/agent_20261030_demo03/
 ## 10. 与前后阶段的衔接
 
 - **第二部分**：24 个工具全部复用已有检测、清洗、聚类、验证函数，未修改其语义；新增的只是工具接口、会话与审计。
-- **第四部分**：A/B/C 三组可直接使用本阶段产物——C 组 bundle 已生成；A 组为 v1 完整案例过滤，B 组为 v2 固定规则；C 组为 v3。正式 A/B/C 对照需等外部审查完成后，用 `compare_strategies(..., agent_bundle=...)` 运行。
+- **第四部分**：当前正式 B 组为 v5，并核验 `v2 → v3 → v4 → v5` 完整清洗链；本报告的历史 C 组 bundle 基于旧 v3 Agent 运行，需在正式 v5 输入上重新执行并由外部审查后才能用于 A/B/C 对照。
 
 ## 11. 复现方式
 

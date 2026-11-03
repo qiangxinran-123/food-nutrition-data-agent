@@ -1,4 +1,4 @@
-"""M3 reproducible demonstration using existing v1/v2 and one existing M1 run."""
+"""M3 reproducible demonstration using existing v1/v5 and one existing M1 run."""
 import argparse
 import json
 from pathlib import Path
@@ -29,13 +29,13 @@ def main():
     parser.add_argument("--count-per-type", type=int, default=5)
     args = parser.parse_args()
     root = args.project_root.resolve()
-    before, after = load_input("1", project_root=root), load_input("2", project_root=root)
-    paths = [root / "logs/checks/off_52k_v1_quality_summary.json", root / "logs/checks_v2/off_52k_v2_quality_summary.json"]
+    before, after = load_input("1", project_root=root), load_input("5", project_root=root)
+    paths = [root / "logs/checks/off_52k_v1_quality_summary.json", root / "logs/checks_v5/off_52k_v5_quality_summary.json"]
     summaries = [json.loads(p.read_text(encoding="utf-8")) for p in paths]
-    quality = compare_quality(before, after, *summaries, change_path=root / "data/processed/change.off_52k_v2_conservative.changes.parquet")
+    quality = compare_quality(before, after, *summaries)
     quality["summary_sources"] = [{"path": str(p), "sha256": sha256_file(p)} for p in paths]
     if not 0 < args.sample_size <= len(after.frame):
-        parser.error("sample-size must be positive and no greater than v2 rows")
+        parser.error("sample-size must be positive and no greater than v5 rows")
     positions = np.sort(np.random.default_rng(args.seed).choice(len(after.frame), size=args.sample_size, replace=False))
     ids = after.frame.iloc[positions][after.row_id_column].tolist()
     injection = inject_errors(after, counts={x: args.count_per_type for x in ("missing", "duplicate", "range", "format", "conflict")}, seed=args.seed, sample_row_ids=ids)
